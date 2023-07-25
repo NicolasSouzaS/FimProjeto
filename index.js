@@ -79,7 +79,7 @@ app.post("/test/insert", (req,res) =>{
     })
 })
 app.put("/test/update/:id", (req,res) => {
-    con.query("UPDATE INTO cliente set ? WHERE idcliente=?", [req.body, req.params.id], (error,result) => {
+    con.query("UPDATE cliente set ? WHERE idcliente=?", [req.body, req.params.id], (error,result) => {
         if(!error)
             return res.status(202).send({ output: "Tabela atualizada com exito", data: result});
         else return res.status(500).send({ output: "Não foi possivel atualizar a tabela", erro: error});
