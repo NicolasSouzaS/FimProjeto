@@ -61,7 +61,7 @@ con.connect((erro) => {
 });
 
 app.get("/test/list", (req, res) =>{
-    con.query("SELECT * FROM testLuucamare" ,(error, result) =>{
+    con.query("SELECT * FROM cliente" ,(error, result) =>{
         if(!error){
             return res.status(200).send({output: "Ok", data: result})
         }
@@ -71,7 +71,7 @@ app.get("/test/list", (req, res) =>{
 }) 
 
 app.post("/test/insert", (req,res) =>{
-    con.query("INSERT INTO testLuucamare SET ?", [req.body], (error,result) =>{
+    con.query("INSERT INTO cliente SET ?", [req.body], (error,result) =>{
         if(!error){
             return res.status(201).send({output: "Inserção feita com sucésso", data: result})
         }
@@ -79,7 +79,7 @@ app.post("/test/insert", (req,res) =>{
     })
 })
 app.put("/test/update/:id", (req,res) => {
-    con.query("UPDATE INTO testLuucamare set ? WHERE idTest=?", [req.body, req.params.id], (error,result) => {
+    con.query("UPDATE INTO cliente set ? WHERE idcliente=?", [req.body, req.params.id], (error,result) => {
         if(!error)
             return res.status(202).send({ output: "Tabela atualizada com exito", data: result});
         else return res.status(500).send({ output: "Não foi possivel atualizar a tabela", erro: error});
