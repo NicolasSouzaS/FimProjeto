@@ -217,3 +217,11 @@ function verificaToken(req,res,next){
 
 //vamos definir a porta de comunicação do servidor
 app.listen(process.env.PORT, () => console.log(`Server online at: ${process.env.HOST}:${process.env.PORT}`));
+
+
+
+
+// Parte para criar o Front End da página utilizando eventos (cliques e etcetera).
+
+
+
