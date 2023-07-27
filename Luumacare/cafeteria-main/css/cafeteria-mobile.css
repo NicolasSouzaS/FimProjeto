@@ -1,0 +1,57 @@
+/* definir a media query junto com as dimensões*/
+@media screen and (min-width: 0px) and (max-width:576px){
+    header {
+        height: 300px;
+        background-repeat: no-repeat;
+        background-position: 0 0;
+    }
+
+    header nav{
+        padding: 50px 10px 50px 5px ;
+        height: 100vh;
+        width: 200px;
+        margin-left: -200px;
+        transition: ease 0.5s;
+        background-color: rgba(31, 30, 30, 0.678);
+        z-index: 10000;
+        position: fixed;
+        top: 0px;
+        
+ }
+
+    header nav ul {
+        display: block;
+        text-align: left;
+    }
+    header nav ul li img {
+        display: none;
+    }
+    header nav ul li {
+        margin-bottom: 10px;
+    }
+    header .btn-mobile{
+        display: block;
+        color: #fff;
+        padding: 10px;
+        font-size: 20pt;
+        font-weight: boldgit ;
+    }
+    .slogan{
+        margin-top:0px;
+        font-size: 17pt;
+        position: absolute;
+        top: 100px;
+        text-shadow: 1px 1px 2px #000;
+    }
+    .em-linha{
+        flex-direction: column;
+    }
+    .div-home img{
+        width: 100%;
+    }
+    .checkout{
+        position: fixed !important;
+}
+
+
+}

@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=, initial-scale=1.0" />
+    <title>Cafeteria</title>
+    <link rel="stylesheet" href="css/cafeteria.css" />
+  </head>
+  <body>
+    <header>
+      <nav>
+        <ul>
+          <li class="nav-header"><a href="index.html">home</a></li>
+          <li class="nav-header"><a href="sobrenos.html">sobre nós</a></li>
+          <li>
+            <a href="index.html">
+              <img src="img/logo-cafe1.png" alt="Logo da Cafeteria" />
+            </a>
+          </li>
+          <li class="nav-header"><a href="cardapio.html">cardápio</a></li>
+          <li class="nav-header"><a href="contato.html">contato</a></li>
+          <li class="checkout">
+            <a href="checkout.html">
+              <ion-icon name="cafe"></ion-icon>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </header>
+
+    <main>
+      <section class="em-linha">
+        <div class="uma-fracao">
+          <img class="img-default" src="img/tomarcafe1.jpg" alt="" />
+        </div>
+        <div class="uma-fracao">
+          <h2 class="sub-h2">Contato</h2>
+          <form
+            class="form"
+            onsubmit="return false"
+            enctype="multipart/form-data"
+          >
+            <input
+              class="input-1"
+              type="text"
+              id="txtnome"
+              required
+              placeholder="Nome Completo"
+            />
+            <input
+              class="input-1"
+              type="email"
+              id="txtemail"
+              required
+              placeholder="E-Mail"
+            />
+            <input
+              class="input-1"
+              type="tel"
+              id="txttelefone"
+              required
+              placeholder="Telefone"
+            />
+
+            <select id="txtassunto" class="input-1">
+              <option value="Selecione">Selecione um Assunto</option>
+              <option value="Dúvida">Dúvida</option>
+              <option value="Elogio">Elogio</option>
+              <option value="Reclamação">Reclamação</option>
+              <option value="Devolução">Devolução</option>
+            </select>
+
+            <textarea class="textarea" name="txtmensagem">Mensagem</textarea>
+
+            <input type="file" id="txtanexo" class="input-1" />
+            <input
+              class="btn-enviar"
+              type="submit"
+              value="Enviar"
+              id="btnenviar"
+            />
+          </form>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="em-linha">
+        <div class="uma-fracao">
+          <h3>Parceiros</h3>
+          <ul>
+            <li>
+              <a href="#"
+                ><img
+                  class="img-parceiros"
+                  src="img/logotrescoracoes.png"
+                  alt="Logo 3 Corações"
+              /></a>
+            </li>
+            <li>
+              <a href="#"
+                ><img
+                  class="img-parceiros"
+                  src="img/logomelitta.png"
+                  alt="Logo Melitta"
+              /></a>
+            </li>
+            <li>
+              <a href="#"
+                ><img
+                  class="img-parceiros"
+                  src="img/logocasapaoqueijo.png"
+                  alt="Logo Casa do Pão de Queijo"
+              /></a>
+            </li>
+          </ul>
+        </div>
+        <div class="uma-fracao">
+          <p>
+            Av. Nova Liberdade, 523 - Vila Nova Rede - São Paulo - SP<br />
+            CEP: 03255-668 - Telefone: 11-5623-9996 | 11-9965-9684
+          </p>
+        </div>
+        <div class="uma-fracao">
+          <ul>
+            <li>
+              <a href="">
+                <ion-icon name="logo-instagram"></ion-icon>
+              </a>
+            </li>
+            <li>
+              <a href="">
+                <ion-icon name="logo-facebook"></ion-icon>
+              </a>
+            </li>
+            <li>
+              <a href="">
+                <ion-icon name="logo-youtube"></ion-icon>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="end-footer">
+        &copy; Copyright 2023 - Design by
+        <a href="https://www.github.com/edilsonsilva">Edilson Silva</a>
+        |
+        <a href="javascript:void" onclick="politica();"
+          >Politica de Privacidade</a
+        >
+      </div>
+    </footer>
+    <script
+      type="module"
+      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"
+    ></script>
+    <script
+      nomodule
+      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"
+    ></script>
+  </body>
+</html>
