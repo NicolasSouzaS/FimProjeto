@@ -31,6 +31,7 @@ app.use(cors());
 app.use(morgan("combined"))
 
 
+
 /* -------------- Banco de dados ---------------------
 configurar a conexão com o banco de dados mysql passando
  - host(servidor de banco de dados)
@@ -60,7 +61,7 @@ con.connect((erro) => {
     console.log(`Conexao estabelecida ${con.threadId}`);
 });
 
-app.get("/test/list", (req, res) =>{
+app.get("/list/clientes", (req, res) =>{
     con.query("SELECT * FROM cliente" ,(error, result) =>{
         if(!error){
             return res.status(200).send({output: "Ok", data: result})
@@ -68,10 +69,29 @@ app.get("/test/list", (req, res) =>{
         else return res.status(500).send({output: "Erro interno ao processar a solicitação", erro: error});
     });
     
-}) 
+});
 
-app.post("/test/insert", (req,res) =>{
+app.get("/list/funcionarios", (req, res) =>{
+    con.query("SELECT * FROM funcionarios" ,(error, result) =>{
+        if(!error){
+            return res.status(200).send({output: "Ok", data: result})
+        }
+        else return res.status(500).send({output: "Erro interno ao processar a solicitação", erro: error});
+    });
+    
+});
+
+app.post("/insert/clientes", (req,res) =>{
     con.query("INSERT INTO cliente SET ?", [req.body], (error,result) =>{
+        if(!error){
+            return res.status(201).send({output: "Inserção feita com sucésso", data: result})
+        }
+        else return res.status(500).send({output: "Erro interno", erro:error})
+    })
+})
+
+app.post("/insert/funcionarios", (req,res) =>{
+    con.query("INSERT INTO funcionarios SET ?", [req.body], (error,result) =>{
         if(!error){
             return res.status(201).send({output: "Inserção feita com sucésso", data: result})
         }

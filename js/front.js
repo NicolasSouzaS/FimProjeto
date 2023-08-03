@@ -1,6 +1,8 @@
 document.getElementById("func").onclick = ()=>{
 }
 
+let modalTitle;
+
 // Obtém a referência para o elemento com o ID 'myModal' (provavelmente um modal)
 const myModal = document.getElementById('myModal');
 
@@ -14,3 +16,9 @@ myModal.addEventListener('shown.bs.modal', () => {
   // Define o foco para o elemento 'myInput'
   myInput.focus();
 });
+
+
+document.getElementById("btn-soliCli").onclick = ()=>{
+  modalTitle = document.getElementById("exampleModalLabel");
+  modalTitle.textContent = "Solicitações de clientes";
+}
