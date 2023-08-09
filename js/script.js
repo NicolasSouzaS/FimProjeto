@@ -1,6 +1,7 @@
 let autenticado;
 let token;
 let key;  
+let
 
 function cadastrarClientes() {
 
@@ -103,20 +104,15 @@ function carregarDadosFuncionarios() {
 
 function editar(id,nome,email,cargo,salario){
 
-  var divUser = document.createElement("div");
-  divUser.setAttribute("class", "div_func");
-  divUser.innerHTML =
+  var divUserFunc = document.createElement("div");
+  divUserFunc.setAttribute("class", "div_editFuncionarios");
+  divUserFunc.innerHTML =
   `
   <div class="teste">
 
   <div class="input-container">
-    <input type="text" id="input" required="">
-    <label for="input" class="label">Nome Funcionario</label>
-    <div class="underline"></div>
-  </div>
-  <div class="input-container">
-    <input type="text" id="input" required="">
-    <label for="input" class="label">Cargo que irá ocupar</label>
+    <input type="text" id="inputCargo" required="">
+    <label for="input" class="label">Cargo ocupado</label>
     <div class="underline"></div>
   </div>
 
@@ -125,13 +121,13 @@ function editar(id,nome,email,cargo,salario){
 
   <div class="teste">
   <div class="input-container">
-    <input type="text" id="input" required="">
+    <input type="text" id="inputSalario" required="">
     <label for="input" class="label">Salário</label>
     <div class="underline"></div>
   </div>
 
   <div class="input-container">
-    <input type="text" id="input" required="">
+    <input type="text" id="inputTelefone" required="">
     <label for="input" class="label">Telefone de contato</label>
     <div class="underline"></div>
   </div>
@@ -139,26 +135,20 @@ function editar(id,nome,email,cargo,salario){
 
   <div class="teste">
   <div class="input-container">
-    <input type="text" id="" required="">
+    <input type="text" id="inputEmail" required="">
     <label for="input" class="label">E-mail de contato</label>
     <div class="underline"></div>
   </div>
 
-  <div class="input-container">
-    <input type="text" id="input" required="">
-    <label for="input" class="label">CPF</label>
-    <div class="underline"></div>
   </div>
-  </div>
-  <div class="input-container">
-    <input type="text" id="input" required="">
-    <label for="input" class="label">Experiencia Profissional</label>
-    <div class="underline"></div>
-  </div>
-
+  
+  <button id="Atualizarbtn">Clique</button>
   
   `;
 
+
+  // Referencia dos campos Inputs
+  
 
   // Fazer uma referência ao body da página HTML
   const body = document.body;
@@ -218,9 +208,14 @@ function editar(id,nome,email,cargo,salario){
 
   inputSub.setAttribute("type","submit");
   inputSub.setAttribute("value","Atualizar");
+  
+  let emailFunc = document.getElementById("inputEmail")
+  let telFunc = document.getElementById("inputTelefone")
+  let salarioFunc = document.getElementById("inputSalario")
+  let cargoFunc = document.getElementById("inputCargo")
+  let atualizarBtn = document.getElementById("Atualizarbtn")
 
-
-  inputSub.onclick = ()=>{
+  atualizarBtn.onclick = ()=>{
       if(inputId != ""){
         fetch(`http://127.0.0.1:30021/update/funcionarios/${id}`,{
           method:`PUT`,
@@ -229,9 +224,10 @@ function editar(id,nome,email,cargo,salario){
               "content-type":"application/json",
           },
           body:JSON.stringify({
-              email:inputEmail.value,
-              cargo:inputCargo.value,
-              salario:inputSalario.value
+              emailFunc:value,
+              telFunc:value,
+              salarioFunc:value,
+              cargoFunc:value
           })
       })
       }
@@ -255,7 +251,7 @@ function editar(id,nome,email,cargo,salario){
   form.appendChild(inputSalario);
   form.appendChild(inputSub);
   divWhite.appendChild(form);
-  body.appendChild(divUser);
+  body.appendChild(divUserFunc);
 }
 
 
