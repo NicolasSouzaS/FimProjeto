@@ -1,5 +1,4 @@
-document.getElementById("func").onclick = ()=>{
-}
+
 
 let modalTitle;
 

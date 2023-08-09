@@ -98,8 +98,16 @@ app.post("/insert/funcionarios", (req,res) =>{
         else return res.status(500).send({output: "Erro interno", erro:error})
     })
 })
-app.put("/test/update/:id", (req,res) => {
+app.put("/update/cliente/:id", (req,res) => {
     con.query("UPDATE cliente set ? WHERE idcliente=?", [req.body, req.params.id], (error,result) => {
+        if(!error)
+            return res.status(202).send({ output: "Tabela atualizada com exito", data: result});
+        else return res.status(500).send({ output: "Não foi possivel atualizar a tabela", erro: error});
+    });
+});
+
+app.put("/update/funcionarios/:id", (req,res) => {
+    con.query("UPDATE funcionarios set ? WHERE idfuncionarios=?", [req.body, req.params.id], (error,result) => {
         if(!error)
             return res.status(202).send({ output: "Tabela atualizada com exito", data: result});
         else return res.status(500).send({ output: "Não foi possivel atualizar a tabela", erro: error});

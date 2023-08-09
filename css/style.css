@@ -43,6 +43,18 @@ h2{
     display: flex;
 }
 
+#divWhite input{
+ display: block;
+}
+
+#divWhite form{
+  width: 200px;
+  margin-top: 50px;
+}
+
+#inputID{
+  width: 200px;
+}
 
 
 /* Adição de componentes de estilização a input cad-func */
