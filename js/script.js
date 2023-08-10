@@ -104,6 +104,10 @@ function carregarDadosFuncionarios() {
 
 function editar(id,nome,email,cargo,salario){
 
+  let buttonAtualizar = document.createElement("div");
+  buttonAtualizar.setAttribute("id", "buttonAtualizar");
+  buttonAtualizar.innerHTML = "<button>Clique</button>"
+
   var divUserFunc = document.createElement("div");
   divUserFunc.setAttribute("class", "div_editFuncionarios");
   divUserFunc.innerHTML =
@@ -142,7 +146,7 @@ function editar(id,nome,email,cargo,salario){
 
   </div>
   
-  <button id="Atualizarbtn">Clique</button>
+  
   
   `;
 
@@ -160,6 +164,7 @@ function editar(id,nome,email,cargo,salario){
   const inputSalario = document.createElement("input");
   const inputEmail = document.createElement("input");
   const inputSub = document.createElement("input");
+  
 
   // Aplicando atributos para os elementos
   divWhite.setAttribute("id","divWhite");
@@ -209,13 +214,16 @@ function editar(id,nome,email,cargo,salario){
   inputSub.setAttribute("type","submit");
   inputSub.setAttribute("value","Atualizar");
   
-  let emailFunc = document.getElementById("inputEmail")
-  let telFunc = document.getElementById("inputTelefone")
-  let salarioFunc = document.getElementById("inputSalario")
-  let cargoFunc = document.getElementById("inputCargo")
-  let atualizarBtn = document.getElementById("Atualizarbtn")
+ 
+  
 
-  atualizarBtn.onclick = ()=>{
+  buttonAtualizar.onclick = ()=>{
+
+    emailFunc = document.getElementById("inputEmail").value
+    telFunc = document.getElementById("inputTelefone").value
+    salarioFunc = document.getElementById("inputSalario").value
+    cargoFunc = document.getElementById("inputCargo").value
+
       if(inputId != ""){
         fetch(`http://127.0.0.1:30021/update/funcionarios/${id}`,{
           method:`PUT`,
@@ -224,10 +232,10 @@ function editar(id,nome,email,cargo,salario){
               "content-type":"application/json",
           },
           body:JSON.stringify({
-              emailFunc:value,
-              telFunc:value,
-              salarioFunc:value,
-              cargoFunc:value
+              email:emailFunc.value,
+              telefone:telFunc.value,
+              salario:salarioFunc.value,
+              cargo:cargoFunc.value
           })
       })
       }
@@ -252,6 +260,7 @@ function editar(id,nome,email,cargo,salario){
   form.appendChild(inputSub);
   divWhite.appendChild(form);
   body.appendChild(divUserFunc);
+  body.appendChild(buttonAtualizar);
 }
 
 
