@@ -104,6 +104,11 @@ function carregarDadosFuncionarios() {
 
 function editar(id,nome,email,cargo,salario){
 
+  let idFunc = id
+  let cargoFunc = cargo
+
+
+
   let buttonAtualizar = document.createElement("div");
   buttonAtualizar.setAttribute("id", "buttonAtualizar");
   buttonAtualizar.innerHTML = "<button>Clique</button>"
@@ -115,7 +120,7 @@ function editar(id,nome,email,cargo,salario){
   <div class="teste">
 
   <div class="input-container">
-    <input type="text" id="inputCargo" required="">
+    <input type="text" id="inputCargo" value="${cargo}" required="">
     <label for="input" class="label">Cargo ocupado</label>
     <div class="underline"></div>
   </div>
@@ -224,8 +229,8 @@ function editar(id,nome,email,cargo,salario){
     salarioFunc = document.getElementById("inputSalario").value
     cargoFunc = document.getElementById("inputCargo").value
 
-      if(inputId != ""){
-        fetch(`http://127.0.0.1:30021/update/funcionarios/${id}`,{
+      
+        fetch(`http://127.0.0.1:30021/update/funcionarios/${idFunc}`,{
           method:`PUT`,
           headers:{
               "accept":"application/json",
@@ -238,10 +243,18 @@ function editar(id,nome,email,cargo,salario){
               cargo:cargoFunc.value
           })
       })
-      }
-      else{
-         return("É preciso de um Id para atualizar os dados")
-      }
+      .then(response => {
+        if (response.ok) {
+            console.log("Dados atualizados com sucesso!");
+        } else {
+            console.error("Erro ao atualizar os dados:", response.statusText);
+        }
+    })
+    .catch(error => {
+        console.error("Erro na requisição:", error);
+    });
+      
+
   }
 
   
