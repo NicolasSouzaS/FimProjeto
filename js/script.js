@@ -1,7 +1,3 @@
-let autenticado;
-let token;
-let key;  
-let
 
 function cadastrarClientes() {
 
@@ -86,12 +82,13 @@ function carregarDadosFuncionarios() {
         result.data.map((item, index) => {
             let divUser = document.createElement("div");
             divUser.setAttribute("class", "div_user");
-            divUser.innerHTML = `<i class="bi bi-person-circle"></i>
-            <h2>${item.nome}</h2>
-            <h2>${item.cargo}</h2>
-            <h2>${item.salario}</h2>
-            <h2>${item.email}</h2>
-            <a href="#" data-bs-dismiss="modal" onclick="editar('${item.idfuncionarios}','${item.nome}','${item.email}','${item.cargo}','${item.salario}');">
+            divUser.innerHTML = `<img style="width:40px; height:40px;" src="./imgs/log.png"/>
+
+            <h2>Nome: ${item.nome}</h2>
+            <h2>Cargo: ${item.cargo}</h2>
+            <h2>Salario: ${item.salario}</h2>
+            <h2>Email: ${item.email}</h2>
+            <a href="#" data-bs-dismiss="modal" onclick="editar('${item.idfuncionarios}','${item.email}','${item.cargo}','${item.salario}','${item.telefone}');">
             <i class="bi bi-pen"></i>
             </a>
             `;
@@ -102,17 +99,15 @@ function carregarDadosFuncionarios() {
     }).catch((error) => console.log(`Erro ao executar a API -> ${error}`));
 };
 
-function editar(id,nome,email,cargo,salario){
-
-  let idFunc = id
-  let cargoFunc = cargo
-
-
+function editar(id,email,cargo,salario,telefone){
 
   let buttonAtualizar = document.createElement("div");
-  buttonAtualizar.setAttribute("id", "buttonAtualizar");
-  buttonAtualizar.innerHTML = "<button>Clique</button>"
-
+  buttonAtualizar.innerHTML = `<div class="d-flex justify-content-center align-items-center" style=" height: ${buttonAtualizar.offsetHeight}px; height:20vh;">
+  <button id="atualizarFunc" class="button">
+    Atualizar funcionários
+  </button>
+  </div>
+  `
   var divUserFunc = document.createElement("div");
   divUserFunc.setAttribute("class", "div_editFuncionarios");
   divUserFunc.innerHTML =
@@ -120,8 +115,8 @@ function editar(id,nome,email,cargo,salario){
   <div class="teste">
 
   <div class="input-container">
-    <input type="text" id="inputCargo" value="${cargo}" required="">
-    <label for="input" class="label">Cargo ocupado</label>
+    <input type="text" style="color:white;" id="inputCargo" value="${cargo}" required="">
+    <label style="color:white;" for="input" class="label">Cargo ocupado</label>
     <div class="underline"></div>
   </div>
 
@@ -130,22 +125,22 @@ function editar(id,nome,email,cargo,salario){
 
   <div class="teste">
   <div class="input-container">
-    <input type="text" id="inputSalario" required="">
-    <label for="input" class="label">Salário</label>
+    <input style="color:white;" type="text" id="inputSalario" value="${salario}" required="">
+    <label style="color:white;" for="input" class="label">Salário</label>
     <div class="underline"></div>
   </div>
 
   <div class="input-container">
-    <input type="text" id="inputTelefone" required="">
-    <label for="input" class="label">Telefone de contato</label>
+    <input style="color:white;" type="text" id="inputTelefone" value="${telefone}" required="">
+    <label style="color:white;" for="input" class="label">Telefone de contato</label>
     <div class="underline"></div>
   </div>
   </div>
 
   <div class="teste">
   <div class="input-container">
-    <input type="text" id="inputEmail" required="">
-    <label for="input" class="label">E-mail de contato</label>
+    <input style="color:white;" type="text" id="inputEmail" value="${email}" required="">
+    <label style="color:white;" for="input" class="label">E-mail de contato</label>
     <div class="underline"></div>
   </div>
 
@@ -173,54 +168,7 @@ function editar(id,nome,email,cargo,salario){
 
   // Aplicando atributos para os elementos
   divWhite.setAttribute("id","divWhite");
-  // Atributo para não enviar o formulário. O envio será feito
-  // via JavaScript.
-  form.setAttribute("onsubmit","return false;")
-
-  // Aplicando atributos para o Id, os atributos são:
-  // type, placeholder, disabled
-  inputId.setAttribute("type","text");
-  inputId.setAttribute("placeholder",`Id ${id}`);
-  inputId.setAttribute("disabled","true");
-  inputId.style.color = "white"
-
-  // Aplicando atributos ao user, os atributos são: type, placeholder
-  // disabled
-  inputUser.setAttribute("type","text");
-  inputUser.setAttribute("placeholder",`Nome: ${nome}`);
-  inputUser.setAttribute("disabled","true");
-  inputUser.setAttribute("class","input-container")
-  inputUser.setAttribute("id","input")
-  inputUser.style.color = "white"
-
-
-  // Atributos para email
-  inputEmail.setAttribute("type","email");
-  inputEmail.setAttribute("placeholder",`Email: ${email}`);
-  inputEmail.setAttribute("class","input-container")
-  inputEmail.setAttribute("id","input")
-  inputEmail.style.color = "white"
-
-
-  inputCargo.setAttribute("type","text");
-  inputCargo.setAttribute("placeholder",`Cargo: ${cargo}`);
-  inputCargo.setAttribute("class","input-container")
-  inputCargo.setAttribute("id","input")
-  inputCargo.style.color = "white"
-
-
-  inputSalario.setAttribute("type","text");
-  inputSalario.setAttribute("placeholder",`Salario: ${salario}`);
-  inputSalario.setAttribute("class","input-container")
-  inputSalario.setAttribute("id","input")
-  inputSalario.style.color = "white"
-
-
-  inputSub.setAttribute("type","submit");
-  inputSub.setAttribute("value","Atualizar");
-  
  
-  
 
   buttonAtualizar.onclick = ()=>{
 
@@ -229,18 +177,20 @@ function editar(id,nome,email,cargo,salario){
     salarioFunc = document.getElementById("inputSalario").value
     cargoFunc = document.getElementById("inputCargo").value
 
+    
+
       
-        fetch(`http://127.0.0.1:30021/update/funcionarios/${idFunc}`,{
+        fetch(`http://127.0.0.1:30021/update/funcionarios/${id}`,{
           method:`PUT`,
           headers:{
               "accept":"application/json",
               "content-type":"application/json",
           },
           body:JSON.stringify({
-              email:emailFunc.value,
-              telefone:telFunc.value,
-              salario:salarioFunc.value,
-              cargo:cargoFunc.value
+              email:emailFunc,
+              telefone:telFunc,
+              salario:salarioFunc,
+              cargo:cargoFunc
           })
       })
       .then(response => {
@@ -292,11 +242,11 @@ function carregarDadosClientes() {
             let divUser = document.createElement("div");
             divUser.setAttribute("class", "div_user");
             divUser.innerHTML = `<i class="bi bi-person-circle"></i>
-            <h2>${item.nome}</h2>
-            <h2>${item.telefone}</h2>
-            <h2>${item.stats}</h2>
-            <h2>${item.responsavel_cliente}</h2>
-            <h2>${item.idade_paciente}</h2>
+            <h2>Nome: ${item.nome}</h2>
+            <h2>Telefone: ${item.telefone}</h2>
+            <h2>Status: ${item.status}</h2>
+            <h2>Responsavel: ${item.responsavel_cliente}</h2>
+            <h2>Idade Paciente: ${item.idade_paciente}</h2>
             <a href="#" onclick="editar('${item.id}','${item.nome}','${item.email}','${item.foto}')">
                  <i class="bi bi-pen"></i>
             </a>
