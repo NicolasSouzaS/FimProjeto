@@ -107,10 +107,18 @@ app.put("/update/cliente/:id", (req,res) => {
 });
 
 app.put("/update/funcionarios/:id", (req,res) => {
-    con.query("UPDATE funcionarios set ? WHERE idfuncionarios=?", [req.body, req.params.id], (error,result) => {
+    con.query("UPDATE funcionarios set ? WHERE idfuncionarios=?", [req.body, req.params.id], (error, result) => {
         if(!error)
             return res.status(202).send({ output: "Tabela atualizada com exito", data: result});
         else return res.status(500).send({ output: "Não foi possivel atualizar a tabela", erro: error});
+    });
+});
+
+app.delete("/delete/funcionarios/:id", (req,res) =>{
+    con.query("DELETE FROM funcionarios WHERE idfuncionarios=?", [req.params.id], (error, result) =>{
+        if(!error)
+            return res.status(204).send({output: "Funcionario deletado", data: result});
+        else return res.status(500).send({output: "Não foi possível deletar o funcionario", erro: error});
     });
 });
 
