@@ -2,8 +2,11 @@ const { response } = require("express");
 
 function cadastrarClientes() {
 
+  const body = document.body
+  const modalCli = document.getElementById("exampleModal2")
   const estrutura = document.querySelector("#cad-func");
   estrutura.innerHTML = "";
+
  
           var divUser = document.createElement("div");
           divUser.setAttribute("class", "div_func");
@@ -12,14 +15,22 @@ function cadastrarClientes() {
           <div class="teste">
 
           <div class="input-container">
-            <input type="text" id="input" required="">
+            <input type="text" id="inputNomeC" required="">
             <label for="input" class="label">Nome Funcionario</label>
             <div class="underline"></div>
           </div>
+
+
           <div class="input-container">
-            <input type="text" id="input" required="">
-            <label for="input" class="label">Cargo que irá ocupar</label>
-            <div class="underline"></div>
+          
+          <select id="cargosC" class="form-select" aria-label="Default select example">
+          <option selected>Cargo</option>
+          <option value="Auxiliar">Auxiliar</option>
+          <option value="Cuidador">Cuidador(a)</option>
+          <option value="TécnicoEnfermagem">Técnico em Enfermagem</option>
+          <option value="Enfermeiro">Enfermeiro(a)</option>
+          </select>
+
           </div>
 
           </div>
@@ -27,13 +38,13 @@ function cadastrarClientes() {
 
           <div class="teste">
           <div class="input-container">
-            <input type="text" id="input" required="">
+            <input type="text" id="inputSalarioC" required="">
             <label for="input" class="label">Salário</label>
             <div class="underline"></div>
           </div>
 
           <div class="input-container">
-            <input type="text" id="input" required="">
+            <input type="text" id="inputTelC" required="">
             <label for="input" class="label">Telefone de contato</label>
             <div class="underline"></div>
           </div>
@@ -41,27 +52,88 @@ function cadastrarClientes() {
 
           <div class="teste">
           <div class="input-container">
-            <input type="text" id="" required="">
+            <input type="text" id="inputEmailC" required="">
             <label for="input" class="label">E-mail de contato</label>
             <div class="underline"></div>
           </div>
 
           <div class="input-container">
-            <input type="text" id="input" required="">
+            <input type="text" id="inputCPFC" required="">
             <label for="input" class="label">CPF</label>
             <div class="underline"></div>
           </div>
+          
           </div>
+          <div class="teste">
+        
           <div class="input-container">
-            <input type="text" id="input" required="">
-            <label for="input" class="label">Experiencia Profissional</label>
+            <input type="text" id="inputEscolaridadeC" required="">
+            <label for="input" class="label">Escolaridade</label>
             <div class="underline"></div>
           </div>
+          </div>
+          <div class="input-container" style="margin-left:297px;width:450px">
+            <label style="margin-right:116px;" for="message">Experiencia Profissional</label>
+            <textarea id="message" rows="4" cols="50" required></textarea>
+          </div>
 
+          
+          <button id="btnCad" style="width:300px; margin:0 auto" class="button button-container">
+           Cadastrar funcionário
+          </button>
+          
+          
           
           `;
           // Adiciona a div do usuário à estrutura
           estrutura.appendChild(divUser);
+
+          let btncad = document.getElementById("btnCad");
+
+          // Vinculando as inputs a variaveis
+          
+
+          btncad.onclick = ()=> {
+
+          let inputCargoC = document.getElementById("cargosC").value;
+          let inputCPFC = document.getElementById("inputCPFC").value;
+          let inputEmailC = document.getElementById("inputEmailC").value;
+          let inputNomeC = document.getElementById("inputNomeC").value;
+          let inputTelC = document.getElementById("inputTelC").value;
+          let inputSalarioC = document.getElementById("inputSalarioC").value;
+          let inputEscolaridadeC = document.getElementById("inputEscolaridadeC").value;
+          let inputExperiC = document.getElementById("message").value;
+
+            
+
+                fetch("http://127.0.0.1:30021/insert/funcionarios",{
+                    method:"POST",
+                    headers:{
+                        "accept":"application/json",
+                        "content-type":"application/json"
+                    },
+                    body:JSON.stringify({
+                        nome:inputNomeC,
+                        email:inputEmailC,
+                        telefone:inputTelC,
+                        cargo:inputCargoC,
+                        cpf:inputCPFC,
+                        salario:inputSalarioC,
+                        experiencia_profissional:inputExperiC,
+                        escolaridade:inputEscolaridadeC
+                    })
+                }).then((response)=>response.json())
+                    .then((result)=>{
+                        if(result.output=="Inserção feita com sucésso"){
+                            alert("Funcionario contratado com sucésso");
+                            window.location.reload();
+                        }
+                        else{
+                            alert("Não foi possível cadastrar. Tente novamente !");
+                        }
+                    })
+                    .catch((error)=>console.error(`Erro ao cadastrar -> ${error}`));
+                }
 };
 
 
@@ -122,6 +194,7 @@ function editarFunc(id,email,cargo,salario,telefone){
   </div>
   `
 
+  
   let caixaBotoes = document.createElement("div");
   caixaBotoes.setAttribute("class","divBotoes")
 
@@ -134,12 +207,13 @@ function editarFunc(id,email,cargo,salario,telefone){
  
   <div class="teste">
 
-  <ion-icon style="color:white; cursor:pointer; font-size:30pt; margin-left: 25px;margin-top:15px;" name="close-outline" id="fecharForm"></ion-icon>
+  
 
   <div class="input-container">
     <input type="text" style="color:white;" id="inputCargo" value="${cargo}" required="">
     <label style="color:white;" for="input" class="label">Cargo ocupado</label>
     <div class="underline"></div>
+    
   </div>
 
   </div>
@@ -219,8 +293,7 @@ function editarFunc(id,email,cargo,salario,telefone){
       .then(response => {
         if (response.ok) {
             alert("Dados atualizados com sucésso")
-            body.removeChild(divUserFunc)
-            body.removeChild(caixaBotoes)
+            windows.location.reload();
         } else {
             alert("Erro ao tentar atualizar os dados")
         }
@@ -232,27 +305,42 @@ function editarFunc(id,email,cargo,salario,telefone){
 
   }
 
-  buttonDeletar.onclick = ()=>{
-    fetch(`http://127.0.0.1:30021/delete/funcionarios/${id}`, {
-      method:`DELETE`,
+  
 
-    })
-    .then(response => {
-      if (response.ok) {
-       alert("Funcionario deletado com sucésso")
-        body.removeChild(divUserFunc)
-        body.removeChild(caixaBotoes)
-      }
-      else {
-        alert("Erro ao tentar deletar o funcionario")
-        body.removeChild(divUserFunc)
-        body.removeChild(caixaBotoes)
-      }
-    })
-    .catch(error => {
-      console.error("Erro ao deletar:", error);
-    });
-  }
+  
+
+  buttonDeletar.onclick = ()=>{
+
+    let buttonConfirm = confirm("Desejá realmente deletar este funcionário ?");
+    buttonConfirm
+    console.log(buttonConfirm)
+
+    if(buttonConfirm == true){
+      fetch(`http://127.0.0.1:30021/delete/funcionarios/${id}`, {
+        method:`DELETE`,
+      })
+      .then(response => {
+        if (response.ok) {
+         alert("Funcionario deletado com sucésso")
+          body.removeChild(divUserFunc)
+          body.removeChild(caixaBotoes)
+        }
+        else {
+          alert("Erro ao tentar deletar o funcionario")
+          body.removeChild(divUserFunc)
+          body.removeChild(caixaBotoes)
+        }
+      })
+      .catch(error => {
+        console.error("Erro ao deletar:", error);
+      });
+    }
+    else{
+
+    }
+    }
+
+    
 
   
   
@@ -274,8 +362,10 @@ function editarFunc(id,email,cargo,salario,telefone){
   caixaBotoes.appendChild(buttonAtualizar);
   caixaBotoes.appendChild(buttonDeletar)
   body.appendChild(caixaBotoes);
-  
+  divUserFunc.appendChild(buttonFechar);
 }
+
+
 
 
 function carregarDadosClientes() {
@@ -298,7 +388,7 @@ function carregarDadosClientes() {
             <h2>Status: ${item.status}</h2>
             <h2>Responsavel: ${item.responsavel_cliente}</h2>
             <h2>Idade Paciente: ${item.idade_paciente}</h2>
-            <a href="#" onclick="editarCli('${item.id}','${item.nome}','${item.email}','${item.foto}')">
+            <a href="#" onclick="editarCli('${item.idcliente}','${item.nome}','${item.email}','${item.telefone}','${item.status}')">
                  <i class="bi bi-pen"></i>
             </a>
             `;
@@ -343,8 +433,8 @@ function editarCli(id,email,cargo,salario,telefone){
   <div class="teste">
 
   <div class="input-container">
-    <input type="text" style="color:white;" id="inputCargo" value="${cargo}" required="">
-    <label style="color:white;" for="input" class="label">Cargo ocupado</label>
+    <input type="text" style="color:white;" id="inputCargo" value="" required="">
+    <label style="color:white;" for="input" class="label">Nome Paciente</label>
     <div class="underline"></div>
   </div>
 
@@ -353,22 +443,22 @@ function editarCli(id,email,cargo,salario,telefone){
 
   <div class="teste">
   <div class="input-container">
-    <input style="color:white;" type="text" id="inputSalario" value="${salario}" required="">
-    <label style="color:white;" for="input" class="label">Salário</label>
+    <input style="color:white;" type="text" id="inputSalario" value="" required="">
+    <label style="color:white;" for="input" class="label">Funcionario Cuidador</label>
     <div class="underline"></div>
   </div>
 
   <div class="input-container">
     <input style="color:white;" type="text" id="inputTelefone" value="${telefone}" required="">
-    <label style="color:white;" for="input" class="label">Telefone de contato</label>
+    <label style="color:white;" for="input" class="label">Telefone</label>
     <div class="underline"></div>
   </div>
   </div>
 
   <div class="teste">
   <div class="input-container">
-    <input style="color:white;" type="text" id="inputEmail" value="${email}" required="">
-    <label style="color:white;" for="input" class="label">E-mail de contato</label>
+    <input style="color:white;" type="text" id="inputEmail" value="${item.status}" required="">
+    <label style="color:white;" for="input" class="label">Status</label>
     <div class="underline"></div>
   </div>
 
