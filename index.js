@@ -122,6 +122,14 @@ app.delete("/delete/funcionarios/:id", (req,res) =>{
     });
 });
 
+app.delete("/delete/cliente/:id", (req,res) =>{
+    con.query("DELETE FROM cliente WHERE idcliente=?", [req.params.id], (error, result) =>{
+        if(!error)
+            return res.status(204).send({output: "Cliente deletado", data: result});
+        else return res.status(500).send({output: "Não foi possível deletar o cliente", erro: error});
+    });
+});
+
 //primeira rota para listar os usuarios
 app.get("/test/list", verificaToken, (req, res) => {
 

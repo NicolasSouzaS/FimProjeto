@@ -1,4 +1,5 @@
-const { response } = require("express");
+let selectFun;
+
 
 function cadastrarClientes() {
 
@@ -246,8 +247,6 @@ function editarFunc(id,email,cargo,salario,telefone){
   
   `;
 
-  const botaoFechar = document.querySelector("#fecharForm");
-
   // Referencia dos campos Inputs
   
 
@@ -255,13 +254,6 @@ function editarFunc(id,email,cargo,salario,telefone){
   const body = document.body;
   const divWhite = document.createElement("div");
   const form = document.createElement("form");
-  const inputId = document.createElement("input");
-  const inputUser = document.createElement("input");
-  const inputCargo = document.createElement("input");
-  const inputSalario = document.createElement("input");
-  const inputEmail = document.createElement("input");
-  const inputSub = document.createElement("input");
-  
 
   // Aplicando atributos para os elementos
   divWhite.setAttribute("id","divWhite");
@@ -322,8 +314,7 @@ function editarFunc(id,email,cargo,salario,telefone){
       .then(response => {
         if (response.ok) {
          alert("Funcionario deletado com sucésso")
-          body.removeChild(divUserFunc)
-          body.removeChild(caixaBotoes)
+         windows.location.reload();
         }
         else {
           alert("Erro ao tentar deletar o funcionario")
@@ -339,24 +330,7 @@ function editarFunc(id,email,cargo,salario,telefone){
 
     }
     }
-
-    
-
-  
-  
   form.setAttribute("class","container");
-  
-  inputId.setAttribute("id","inputID");
-  inputId.setAttribute("class","input-container");
-  inputId.setAttribute("class", "label");
-  inputId.setAttribute("class","underline")
-
-  form.appendChild(inputId);
-  form.appendChild(inputUser);
-  form.appendChild(inputEmail);
-  form.appendChild(inputCargo);
-  form.appendChild(inputSalario);
-  form.appendChild(inputSub);
   divWhite.appendChild(form);
   body.appendChild(divUserFunc);
   caixaBotoes.appendChild(buttonAtualizar);
@@ -385,10 +359,10 @@ function carregarDadosClientes() {
             divUser.innerHTML = `<i class="bi bi-person-circle"></i>
             <h2>Nome: ${item.nome}</h2>
             <h2>Telefone: ${item.telefone}</h2>
-            <h2>Status: ${item.status}</h2>
+            <h2>Status: ${item.statusCliente}</h2>
             <h2>Responsavel: ${item.responsavel_cliente}</h2>
             <h2>Idade Paciente: ${item.idade_paciente}</h2>
-            <a href="#" onclick="editarCli('${item.idcliente}','${item.nome}','${item.email}','${item.telefone}','${item.status}')">
+            <a href="#" data-bs-dismiss="modal" onclick="editarCli('${item.idcliente}','${item.nomePaciente}','${item.telefone}','${item.statusCliente}','${item.idfuncionarios}')">
                  <i class="bi bi-pen"></i>
             </a>
             `;
@@ -399,41 +373,39 @@ function carregarDadosClientes() {
 };
 
 
-function editarCli(id,email,cargo,salario,telefone){
+function editarCli(id,nomePaciente,telefone,statusCliente){
 
-  
-
-  let buttonAtualizar = document.createElement("div");
-  buttonAtualizar.setAttribute("class","divAtualizar")
-  buttonAtualizar.innerHTML = `<div class="d-flex justify-content-center align-items-center" style=" height: ${buttonAtualizar.offsetHeight}px; height:20vh;">
+  let buttonAtualizarCli = document.createElement("div");
+  buttonAtualizarCli.setAttribute("class","divAtualizar")
+  buttonAtualizarCli.innerHTML = `<div class="d-flex justify-content-center align-items-center" style=" height: ${buttonAtualizarCli.offsetHeight}px; height:20vh;">
   <button class="button">
     Atualizar Cliente
   </button>
   </div>
   `
 
-  let buttonDeletar = document.createElement("div");
-  buttonDeletar.setAttribute("class","divDeletar")
-  buttonDeletar.innerHTML = `<div class="d-flex justify-content-center align-items-center" style=" height: ${buttonAtualizar.offsetHeight}px; height:20vh;">
+  let buttonDeletarCli = document.createElement("div");
+  buttonDeletarCli.setAttribute("class","divDeletar")
+  buttonDeletarCli.innerHTML = `<div class="d-flex justify-content-center align-items-center" style=" height: ${buttonAtualizarCli.offsetHeight}px; height:20vh;">
   <button class="button">
     Deletar Funcionário
   </button>
   </div>
   `
 
-  let caixaBotoes = document.createElement("div");
-  caixaBotoes.setAttribute("class","divBotoes")
+  let caixaBotoesCli = document.createElement("div");
+  caixaBotoesCli.setAttribute("class","divBotoes")
 
   
 
-  var divUserFunc = document.createElement("div");
-  divUserFunc.setAttribute("class", "div_editFuncionarios");
-  divUserFunc.innerHTML =
+  var divUserFuncCli = document.createElement("div");
+  divUserFuncCli.setAttribute("class", "div_editFuncionarios");
+  divUserFuncCli.innerHTML =
   `
   <div class="teste">
 
   <div class="input-container">
-    <input type="text" style="color:white;" id="inputCargo" value="" required="">
+    <input type="text" style="color:white;" id="inputnomeP" value="${nomePaciente}" required="">
     <label style="color:white;" for="input" class="label">Nome Paciente</label>
     <div class="underline"></div>
   </div>
@@ -443,13 +415,14 @@ function editarCli(id,email,cargo,salario,telefone){
 
   <div class="teste">
   <div class="input-container">
-    <input style="color:white;" type="text" id="inputSalario" value="" required="">
-    <label style="color:white;" for="input" class="label">Funcionario Cuidador</label>
+
+  <select id="cargosFunc" class="form-select" aria-label="Default select example">
+  </select>
     <div class="underline"></div>
   </div>
 
   <div class="input-container">
-    <input style="color:white;" type="text" id="inputTelefone" value="${telefone}" required="">
+    <input style="color:white;" type="text" id="inputTelefoneCli" value="${telefone}" required="">
     <label style="color:white;" for="input" class="label">Telefone</label>
     <div class="underline"></div>
   </div>
@@ -457,7 +430,7 @@ function editarCli(id,email,cargo,salario,telefone){
 
   <div class="teste">
   <div class="input-container">
-    <input style="color:white;" type="text" id="inputEmail" value="${item.status}" required="">
+    <input style="color:white;" type="text" id="inputstatusCli" value="${statusCliente}" required="">
     <label style="color:white;" for="input" class="label">Status</label>
     <div class="underline"></div>
   </div>
@@ -476,40 +449,47 @@ function editarCli(id,email,cargo,salario,telefone){
   const body = document.body;
   const divWhite = document.createElement("div");
   const form = document.createElement("form");
-  const inputId = document.createElement("input");
-  const inputUser = document.createElement("input");
-  const inputCargo = document.createElement("input");
-  const inputSalario = document.createElement("input");
-  const inputEmail = document.createElement("input");
-  const inputSub = document.createElement("input");
+  
   
 
   // Aplicando atributos para os elementos
   divWhite.setAttribute("id","divWhite");
   
+  let opt = `<option selected>Selecionar funcionário ao paciente</option>`
+ 
+  fetch("http://127.0.0.1:30021/list/funcionarios")
+    .then((response) => response.json())
+    .then((result) => {
+      selectFun = document.getElementById("cargosFunc");
+        // Para cada item na lista de usuários, cria uma div de usuário e a preenche com informações
+        result.data.map((item, index) => {
+        
+          
+            opt += `<option value="${item.id}">${item.nome}</option>`;
+         
+         
+        })
+        selectFun.innerHTML = opt
+      }
+    )
+    .catch((erro)=>{
+      console.error(erro);
+    })
   
+  
+  buttonAtualizarCli.onclick = ()=>{
 
-  buttonAtualizar.onclick = ()=>{
+    let cargosFuncionario = document.getElementById("cargosFunc").value;
 
-    emailFunc = document.getElementById("inputEmail").value
-    telFunc = document.getElementById("inputTelefone").value
-    salarioFunc = document.getElementById("inputSalario").value
-    cargoFunc = document.getElementById("inputCargo").value
 
-    
-
-      
-        fetch(`http://127.0.0.1:30021/update/funcionarios/${id}`,{
+        fetch(`http://127.0.0.1:30021/update/cliente/${id}`,{
           method:`PUT`,
           headers:{
               "accept":"application/json",
               "content-type":"application/json",
           },
           body:JSON.stringify({
-              email:emailFunc,
-              telefone:telFunc,
-              salario:salarioFunc,
-              cargo:cargoFunc
+             idfuncionarios:cargosFuncionario
           })
       })
       .then(response => {
@@ -528,7 +508,8 @@ function editarCli(id,email,cargo,salario,telefone){
 
   }
 
-  buttonDeletar.onclick = ()=>{
+  buttonDeletarCli.onclick = ()=>{
+    
     fetch(`http://127.0.0.1:30021/delete/funcionarios/${id}`, {
       method:`DELETE`,
 
@@ -536,13 +517,11 @@ function editarCli(id,email,cargo,salario,telefone){
     .then(response => {
       if (response.ok) {
        alert("Funcionario deletado com sucésso")
-        body.removeChild(divUserFunc)
-        body.removeChild(caixaBotoes)
+        windows.location.reload();
       }
       else {
         alert("Erro ao tentar deletar o funcionario")
-        body.removeChild(divUserFunc)
-        body.removeChild(caixaBotoes)
+        windows.location.reload();
       }
     })
     .catch(error => {
@@ -552,22 +531,14 @@ function editarCli(id,email,cargo,salario,telefone){
 
   
   form.setAttribute("class","container");
-  
-  inputId.setAttribute("id","inputID");
-  inputId.setAttribute("class","input-container");
-  inputId.setAttribute("class", "label");
-  inputId.setAttribute("class","underline")
 
-  form.appendChild(inputId);
-  form.appendChild(inputUser);
-  form.appendChild(inputEmail);
-  form.appendChild(inputCargo);
-  form.appendChild(inputSalario);
-  form.appendChild(inputSub);
+
+  
   divWhite.appendChild(form);
-  body.appendChild(divUserFunc);
-  caixaBotoes.appendChild(buttonAtualizar);
-  caixaBotoes.appendChild(buttonDeletar)
-  body.appendChild(caixaBotoes);
+  body.appendChild(divUserFuncCli);
+  caixaBotoesCli.appendChild(buttonAtualizarCli);
+  caixaBotoesCli.appendChild(buttonDeletarCli);
+  body.appendChild(caixaBotoesCli);
+
   
 }
