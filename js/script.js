@@ -265,7 +265,7 @@ function editarFunc(id,email,cargo,salario,telefone){
     telFunc = document.getElementById("inputTelefone").value
     salarioFunc = document.getElementById("inputSalario").value
     cargoFunc = document.getElementById("inputCargo").value
-
+ 
     
 
       
@@ -285,7 +285,7 @@ function editarFunc(id,email,cargo,salario,telefone){
       .then(response => {
         if (response.ok) {
             alert("Dados atualizados com sucésso")
-            windows.location.reload();
+            window.location.reload();
         } else {
             alert("Erro ao tentar atualizar os dados")
         }
@@ -314,12 +314,10 @@ function editarFunc(id,email,cargo,salario,telefone){
       .then(response => {
         if (response.ok) {
          alert("Funcionario deletado com sucésso")
-         windows.location.reload();
+         window.location.reload();
         }
         else {
           alert("Erro ao tentar deletar o funcionario")
-          body.removeChild(divUserFunc)
-          body.removeChild(caixaBotoes)
         }
       })
       .catch(error => {
@@ -344,6 +342,7 @@ function editarFunc(id,email,cargo,salario,telefone){
 
 function carregarDadosClientes() {
 
+  
 
     // Obtém o elemento com o ID "list-cli"
     const estrutura = document.getElementById("list-cli")
@@ -388,7 +387,7 @@ function editarCli(id,nomePaciente,telefone,statusCliente){
   buttonDeletarCli.setAttribute("class","divDeletar")
   buttonDeletarCli.innerHTML = `<div class="d-flex justify-content-center align-items-center" style=" height: ${buttonAtualizarCli.offsetHeight}px; height:20vh;">
   <button class="button">
-    Deletar Funcionário
+    Deletar Cliente
   </button>
   </div>
   `
@@ -465,7 +464,7 @@ function editarCli(id,nomePaciente,telefone,statusCliente){
         result.data.map((item, index) => {
         
           
-            opt += `<option value="${item.id}">${item.nome}</option>`;
+          opt += `<option value="${item.idfuncionarios}">${item.nome}</option>`;
          
          
         })
@@ -479,9 +478,6 @@ function editarCli(id,nomePaciente,telefone,statusCliente){
   
   buttonAtualizarCli.onclick = ()=>{
 
-    let cargosFuncionario = document.getElementById("cargosFunc").value;
-
-
         fetch(`http://127.0.0.1:30021/update/cliente/${id}`,{
           method:`PUT`,
           headers:{
@@ -489,15 +485,24 @@ function editarCli(id,nomePaciente,telefone,statusCliente){
               "content-type":"application/json",
           },
           body:JSON.stringify({
-             idfuncionarios:cargosFuncionario
+             idfuncionarios:selectFun.value
           })
       })
       .then(response => {
         if (response.ok) {
             alert("Dados atualizados com sucésso")
-            body.removeChild(divUserFunc)
-            body.removeChild(caixaBotoes)
-        } else {
+            fetch(`http://127.0.0.1:30021/update/cliente/${id}`,{
+          method:`PUT`,
+          headers:{
+              "accept":"application/json",
+              "content-type":"application/json",
+          },
+          body:JSON.stringify({
+             statusCliente:"Atendido"
+          })
+        })
+        window.location.reload();
+       } else {
             alert("Erro ao tentar atualizar os dados")
         }
     })
@@ -505,28 +510,37 @@ function editarCli(id,nomePaciente,telefone,statusCliente){
         console.error("Erro na requisição:", error);
     });
       
-
+    
   }
+  
 
   buttonDeletarCli.onclick = ()=>{
     
-    fetch(`http://127.0.0.1:30021/delete/funcionarios/${id}`, {
-      method:`DELETE`,
+   
+    let buttonConfirmCli = confirm("Desejá realmente deletar este cliente ?");
+    buttonConfirmCli
+    console.log(buttonConfirmCli)
 
-    })
-    .then(response => {
-      if (response.ok) {
-       alert("Funcionario deletado com sucésso")
-        windows.location.reload();
-      }
-      else {
-        alert("Erro ao tentar deletar o funcionario")
-        windows.location.reload();
-      }
-    })
-    .catch(error => {
-      console.error("Erro ao deletar:", error);
-    });
+    if(buttonConfirmCli == true){
+      fetch(`http://127.0.0.1:30021/delete/cliente/${id}`, {
+        method:`DELETE`,
+      })
+      .then(response => {
+        if (response.ok) {
+         alert("Cliente deletado com sucésso")
+         window.location.reload();
+        }
+        else {
+          alert("Erro ao tentar deletar o cliente")
+        }
+      })
+      .catch(error => {
+        console.error("Erro ao deletar:", error);
+      });
+    }
+    else{
+
+    }
   }
 
   
@@ -538,7 +552,58 @@ function editarCli(id,nomePaciente,telefone,statusCliente){
   body.appendChild(divUserFuncCli);
   caixaBotoesCli.appendChild(buttonAtualizarCli);
   caixaBotoesCli.appendChild(buttonDeletarCli);
-  body.appendChild(caixaBotoesCli);
+  body.appendChild(caixaBotoesCli); 
+}
 
-  
+function cadastrarClientesForm (){
+
+  const body = document.body;
+  const btnEnviarForm = document.getElementById("btnEnviarForm");
+
+  if( inputIdadeForm == "" ){
+    return alert("Todos os campos devem ser preenchidos para requistar o contato conosco")
+  }
+  else{
+
+   let inputNomePaciente = document.getElementById("inputPaciente").value;
+   let inputIdadeForm = document.getElementById("inputIdadeForm").value;
+   let inputAcompa = document.getElementById("inputAcompanhante").value;
+   let inputEmailPaci = document.getElementById("inputEmailForm").value;
+   let inputTelForm = document.getElementById("inpuTelForm").value;
+   let inputDescr = document.getElementById("exampleFormControlTextarea1").value;
+
+   console.log(inputNomePaciente)
+   console.log(inputIdadeForm)
+   console.log(inputAcompa)
+   console.log(inputEmailPaci)
+   console.log(inputTelForm)
+   console.log(inputDescr)
+
+    fetch("http://127.0.0.1:30021/insert/cliente",{
+        method:"POST",
+        headers:{
+            "accept":"application/json",
+            "content-type":"application/json"
+        },
+        body:JSON.stringify({
+          nome:inputAcompa,
+          email:inputEmailPaci,
+          telefone:inputTelF,
+          dataNascimento:inputIdadeForm,
+          nomePaciente:inputAcompa,
+          descricaoSaude:inputDescr
+      })
+    }).then((response)=>response.json())
+        .then((result)=>{
+            if(result.output=="Inserção feita com sucésso"){
+                alert("Formulário enviado, Bem-vindo a Lumacare, entraremos em contato brevemente. Obrigado!");
+
+            }
+            else{
+                alert("Não foi possível enviar. Tente novamente mais tarde !");
+        
+            }
+        })
+        .catch((error)=>console.error(`Erro ao cadastrar -> ${error}`));
+    }
 }

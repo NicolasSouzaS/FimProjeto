@@ -1,0 +1,279 @@
+.card-texto{
+  color: #fff;
+  font-family: Arial, sans-serif;
+  font-size: 13pt;
+}
+
+.card-titulo{
+  color: #fff;
+  font-family: Verdana;
+  font-size: 20pt;
+  text-align: center;
+}
+
+.background-carousel {
+  position: relative;
+}
+
+.carousel-item {
+  position: relative;
+  text-align: center;
+}
+
+.carousel-item::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #29ada999;; /* Cor com transparência */
+}
+
+.carousel-inner img {
+  object-fit: cover;
+  max-height: 100%;
+}
+
+.carousel-caption {
+  position: absolute;
+  top: 56%; /* Centraliza verticalmente no meio da imagem */
+  left: 0;
+  right: 0;
+  transform: translateY(-50%); /* Ajusta para centralizar corretamente */
+  padding: 20px;
+  color: #1a7a76;
+  font-size: 30px;
+  text-align: center;
+}
+/* Inicio do whatsapp */
+.whatsapp{
+  margin-top: 30px;
+  background-color: #1a7a76;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+.text-h1{
+  font-family: Arial;
+  text-align: center;
+  color: #ebe7e7;
+}
+.botton-whatsapp {
+  border: 0;
+  outline: none;
+  cursor: pointer;
+  padding: 0.9rem 2rem;
+  margin: 0;
+  font-family: inherit;
+  font-size: inherit;
+  position: relative;
+  display: inline-block;
+  letter-spacing: 0.05rem;
+  font-weight: 700;
+  font-size: 17px;
+  border-radius: 500px;
+  overflow: hidden;
+  background: #25D366;
+ }
+ 
+ .botton-whatsapp span {
+  position: relative;
+  z-index: 10;
+  transition: color 0.4s;
+ }
+ 
+ .botton-whatsapp:hover span {
+  color: #fff;
+ }
+ 
+ .botton-whatsapp::before,
+ .botton-whatsapp::after {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+ }
+ 
+ .botton-whatsapp::before {
+  content: "";
+  background: #ebe7e7;
+  width: 120%;
+  left: -10%;
+  transform: skew(30deg);
+  transition: transform 0.4s cubic-bezier(0.3, 1, 0.8, 1);
+ }
+ 
+ .botton-whatsapp:hover::before {
+  transform: translate3d(100%, 0, 0);
+ }
+ 
+/* fim do whatsapp */
+
+/* Cor de fundo quando o acordeão está aberto */
+.accordion-button:not(.collapsed) {
+  background-color: #000000; /* Cor de fundo desejada */
+  color: #000; /* Cor do texto desejada */
+}
+
+/* Cor de fundo padrão do acordeão quando está fechado */
+.accordion-button {
+  background-color: #030101; /* Cor de fundo padrão */
+  color: #000; /* Cor do texto padrão */
+}
+
+/* inicio card-titulo */
+.card-titulo{
+  margin-top: 20px;
+  color: #007b77;
+}
+.card-texto{
+  text-align: justify; 
+  font-size: 20px;
+  margin-top: 20px;
+  color: #181818;
+}
+/* fim do card-titulo */
+
+/* Botão para Subir */
+.div_scroll{
+  float: right;          
+}
+
+.scroll-up {
+  background-color: rgba(255, 255, 255);
+  padding: 10px;
+  right: 20px;
+  bottom: 90px;
+  border-radius: 10%;
+}
+
+.scroll-up ion-icon{
+  color: #1A7A76;
+  height: 5;
+}
+
+
+
+/* Inicio do card */
+.color-card-group{
+  background-color: #29aea94f;
+  margin-top: -16px;
+}
+.cardcolor{
+  max-width: 100%;
+  border: 0;
+  border-radius: 0%;
+  background-color: #dddddd;
+}
+.cardtabelas{
+  border: 0;
+  background-color: #29aea94f;
+}
+.card-img{
+  width: 95%; 
+  height: auto; 
+  margin: 10px;
+
+}
+/* fim do card */
+
+
+
+/* Inicio do Feedback */
+.card-user{
+  margin: 20px;
+}
+.text-texto{
+  font-family: Arial;
+  margin: 30px;
+  color: #ebe7e7;
+  font-size: 14pt;
+}
+.img-feed{
+  border-radius: 50%; 
+  width: 150px; 
+  height: 150px;
+  
+}
+.card-feed{
+  background-color: #228F8B !important;
+}
+.tablefundo{
+  margin: 20px;
+  background-color: #1a7a76;
+}
+/* fim do Feedback */
+
+/* Início do botão do FAQ*/
+.faq{
+  background-color: #1a7a76;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+}
+.button-faq {
+  border: 3px solid #ebe7e7;
+  outline: none;
+  cursor: pointer;
+  padding: 0.9rem 2rem;
+  margin: 0;
+  font-family: inherit;
+  font-size: inherit;
+  position: relative;
+  display: inline-block;
+  letter-spacing: 0.05rem;
+  font-weight: 700;
+  font-size: 17px;
+  border-radius: 500px;
+  overflow: hidden;
+  background: #29AEA9;
+ }
+ .button-faq span {
+  position: relative;
+  z-index: 10;
+  transition: color 0.4s;
+ }
+ 
+  .button-faq:hover span {
+  color: #fff;
+ }
+ 
+ .button-faq::before,
+ .button-faq::after {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+ }
+ 
+ .button-faq::before {
+  content: "";
+  background: #1A7A76;
+  width: 120%;
+  left: -10%;
+  transform: skew(30deg);
+  transition: transform 0.4s cubic-bezier(0.3, 1, 0.8, 1);
+ }
+ 
+ .button-faq:hover::before {
+  transform: translate3d(100%, 0, 0);
+ }
+/* Fim do botão do FAQ */
+
+
+.card-sobrenos{
+  border-radius: 10px;
+  width: 650px;
+  margin: 10px;
+}
