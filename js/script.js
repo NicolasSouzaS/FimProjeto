@@ -1,18 +1,38 @@
-let selectFun;
+// Função para enviar o email usando o nodemailer
+function enviarEmail(destinatario, assunto, corpo) {
+  const transporter = nodemailer.createTransport({
+    service: "Gmail", // ou outro provedor de e-mail
+    auth: {
+      user: "nicolas.souzapb174@gmail.com", // Insira o seu e-mail aqui
+      pass: "Nicolas150@", // Insira a sua senha aqui
+    },
+  });
 
+  const mailOptions = {
+    from: "nicolas.souzapb174@gmail.com", // Insira o seu e-mail aqui
+    to: destinatario,
+    subject: assunto,
+    text: corpo,
+  };
+
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      console.log("Erro ao enviar o e-mail:", error);
+    } else {
+      console.log("E-mail enviado com sucesso:", info.response);
+    }
+  });
+}
 
 function cadastrarClientes() {
-
-  const body = document.body
-  const modalCli = document.getElementById("exampleModal2")
+  const body = document.body;
+  const modalCli = document.getElementById("exampleModal2");
   const estrutura = document.querySelector("#cad-func");
   estrutura.innerHTML = "";
 
- 
-          var divUser = document.createElement("div");
-          divUser.setAttribute("class", "div_func");
-          divUser.innerHTML =
-          `
+  var divUser = document.createElement("div");
+  divUser.setAttribute("class", "div_func");
+  divUser.innerHTML = `
           <div class="teste">
 
           <div class="input-container">
@@ -86,77 +106,68 @@ function cadastrarClientes() {
           
           
           `;
-          // Adiciona a div do usuário à estrutura
-          estrutura.appendChild(divUser);
+  // Adiciona a div do usuário à estrutura
+  estrutura.appendChild(divUser);
 
-          let btncad = document.getElementById("btnCad");
+  let btncad = document.getElementById("btnCad");
 
-          // Vinculando as inputs a variaveis
-          
+  // Vinculando as inputs a variaveis
 
-          btncad.onclick = ()=> {
+  btncad.onclick = () => {
+    let inputCargoC = document.getElementById("cargosC").value;
+    let inputCPFC = document.getElementById("inputCPFC").value;
+    let inputEmailC = document.getElementById("inputEmailC").value;
+    let inputNomeC = document.getElementById("inputNomeC").value;
+    let inputTelC = document.getElementById("inputTelC").value;
+    let inputSalarioC = document.getElementById("inputSalarioC").value;
+    let inputEscolaridadeC =
+      document.getElementById("inputEscolaridadeC").value;
+    let inputExperiC = document.getElementById("message").value;
 
-          let inputCargoC = document.getElementById("cargosC").value;
-          let inputCPFC = document.getElementById("inputCPFC").value;
-          let inputEmailC = document.getElementById("inputEmailC").value;
-          let inputNomeC = document.getElementById("inputNomeC").value;
-          let inputTelC = document.getElementById("inputTelC").value;
-          let inputSalarioC = document.getElementById("inputSalarioC").value;
-          let inputEscolaridadeC = document.getElementById("inputEscolaridadeC").value;
-          let inputExperiC = document.getElementById("message").value;
-
-            
-
-                fetch("http://127.0.0.1:30021/insert/funcionarios",{
-                    method:"POST",
-                    headers:{
-                        "accept":"application/json",
-                        "content-type":"application/json"
-                    },
-                    body:JSON.stringify({
-                        nome:inputNomeC,
-                        email:inputEmailC,
-                        telefone:inputTelC,
-                        cargo:inputCargoC,
-                        cpf:inputCPFC,
-                        salario:inputSalarioC,
-                        experiencia_profissional:inputExperiC,
-                        escolaridade:inputEscolaridadeC
-                    })
-                }).then((response)=>response.json())
-                    .then((result)=>{
-                        if(result.output=="Inserção feita com sucésso"){
-                            alert("Funcionario contratado com sucésso");
-                            window.location.reload();
-                        }
-                        else{
-                            alert("Não foi possível cadastrar. Tente novamente !");
-                        }
-                    })
-                    .catch((error)=>console.error(`Erro ao cadastrar -> ${error}`));
-                }
-};
-
-
-
+    fetch("http://127.0.0.1:30021/insert/funcionarios", {
+      method: "POST",
+      headers: {
+        accept: "application/json",
+        "content-type": "application/json",
+      },
+      body: JSON.stringify({
+        nome: inputNomeC,
+        email: inputEmailC,
+        telefone: inputTelC,
+        cargo: inputCargoC,
+        cpf: inputCPFC,
+        salario: inputSalarioC,
+        experiencia_profissional: inputExperiC,
+        escolaridade: inputEscolaridadeC,
+      }),
+    })
+      .then((response) => response.json())
+      .then((result) => {
+        if (result.output == "Inserção feita com sucésso") {
+          alert("Funcionario contratado com sucésso");
+          window.location.reload();
+        } else {
+          alert("Não foi possível cadastrar. Tente novamente !");
+        }
+      })
+      .catch((error) => console.error(`Erro ao cadastrar -> ${error}`));
+  };
+}
 
 function carregarDadosFuncionarios() {
+  // Obtém o elemento com o ID "list-func"
+  const estrutura = document.getElementById("list-func");
+  estrutura.innerHTML = "";
 
-    
-
-    // Obtém o elemento com o ID "list-func"
-    const estrutura = document.getElementById("list-func")
-    estrutura.innerHTML = "";
-    
-    // Faz uma solicitação para buscar uma lista de usuários em um servidor local
-    fetch("http://127.0.0.1:30021/list/funcionarios")
+  // Faz uma solicitação para buscar uma lista de usuários em um servidor local
+  fetch("http://127.0.0.1:30021/list/funcionarios")
     .then((response) => response.json())
     .then((result) => {
-        // Para cada item na lista de usuários, cria uma div de usuário e a preenche com informações
-        result.data.map((item, index) => {
-            let divUser = document.createElement("div");
-            divUser.setAttribute("class", "div_user");
-            divUser.innerHTML = `<img style="width:40px; height:40px;" src="./imgs/log.png"/>
+      // Para cada item na lista de usuários, cria uma div de usuário e a preenche com informações
+      result.data.map((item, index) => {
+        let divUser = document.createElement("div");
+        divUser.setAttribute("class", "div_user");
+        divUser.innerHTML = `<img style="width:40px; height:40px;" src="./imgs/log.png"/>
 
             <h2>Nome: ${item.nome}</h2>
             <h2>Cargo: ${item.cargo}</h2>
@@ -166,45 +177,38 @@ function carregarDadosFuncionarios() {
             <i class="bi bi-pen"></i>
             </a>
             `;
-            // Adiciona a div do usuário à estrutura
-            estrutura.appendChild(divUser);
-          
-        })
-    }).catch((error) => console.log(`Erro ao executar a API -> ${error}`));
-};
+        // Adiciona a div do usuário à estrutura
+        estrutura.appendChild(divUser);
+      });
+    })
+    .catch((error) => console.log(`Erro ao executar a API -> ${error}`));
+}
 
-function editarFunc(id,email,cargo,salario,telefone){
-
-  
-
+function editarFunc(id, email, cargo, salario, telefone) {
   let buttonAtualizar = document.createElement("div");
-  buttonAtualizar.setAttribute("class","divAtualizar")
+  buttonAtualizar.setAttribute("class", "divAtualizar");
   buttonAtualizar.innerHTML = `<div class="d-flex justify-content-center align-items-center" style=" height: ${buttonAtualizar.offsetHeight}px; height:20vh;">
   <button class="button">
     Atualizar Funcionário
   </button>
   </div>
-  `
+  `;
 
   let buttonDeletar = document.createElement("div");
-  buttonDeletar.setAttribute("class","divDeletar")
+  buttonDeletar.setAttribute("class", "divDeletar");
   buttonDeletar.innerHTML = `<div class="d-flex justify-content-center align-items-center" style=" height: ${buttonAtualizar.offsetHeight}px; height:20vh;">
   <button class="button">
     Deletar Funcionário
   </button>
   </div>
-  `
+  `;
 
-  
   let caixaBotoes = document.createElement("div");
-  caixaBotoes.setAttribute("class","divBotoes")
-
-  
+  caixaBotoes.setAttribute("class", "divBotoes");
 
   var divUserFunc = document.createElement("div");
   divUserFunc.setAttribute("class", "div_editFuncionarios");
-  divUserFunc.innerHTML =
-  `
+  divUserFunc.innerHTML = `
  
   <div class="teste">
 
@@ -248,7 +252,6 @@ function editarFunc(id,email,cargo,salario,telefone){
   `;
 
   // Referencia dos campos Inputs
-  
 
   // Fazer uma referência ao body da página HTML
   const body = document.body;
@@ -256,151 +259,126 @@ function editarFunc(id,email,cargo,salario,telefone){
   const form = document.createElement("form");
 
   // Aplicando atributos para os elementos
-  divWhite.setAttribute("id","divWhite");
-  
-  
-  buttonAtualizar.onclick = ()=>{
+  divWhite.setAttribute("id", "divWhite");
 
-    emailFunc = document.getElementById("inputEmail").value
-    telFunc = document.getElementById("inputTelefone").value
-    salarioFunc = document.getElementById("inputSalario").value
-    cargoFunc = document.getElementById("inputCargo").value
- 
-    
+  buttonAtualizar.onclick = () => {
+    emailFunc = document.getElementById("inputEmail").value;
+    telFunc = document.getElementById("inputTelefone").value;
+    salarioFunc = document.getElementById("inputSalario").value;
+    cargoFunc = document.getElementById("inputCargo").value;
 
-      
-        fetch(`http://127.0.0.1:30021/update/funcionarios/${id}`,{
-          method:`PUT`,
-          headers:{
-              "accept":"application/json",
-              "content-type":"application/json",
-          },
-          body:JSON.stringify({
-              email:emailFunc,
-              telefone:telFunc,
-              salario:salarioFunc,
-              cargo:cargoFunc
-          })
-      })
-      .then(response => {
-        if (response.ok) {
-            alert("Dados atualizados com sucésso")
-            window.location.reload();
-        } else {
-            alert("Erro ao tentar atualizar os dados")
-        }
+    fetch(`http://127.0.0.1:30021/update/funcionarios/${id}`, {
+      method: `PUT`,
+      headers: {
+        accept: "application/json",
+        "content-type": "application/json",
+      },
+      body: JSON.stringify({
+        email: emailFunc,
+        telefone: telFunc,
+        salario: salarioFunc,
+        cargo: cargoFunc,
+      }),
     })
-    .catch(error => {
-        console.error("Erro na requisição:", error);
-    });
-      
-
-  }
-
-  
-
-  
-
-  buttonDeletar.onclick = ()=>{
-
-    let buttonConfirm = confirm("Desejá realmente deletar este funcionário ?");
-    buttonConfirm
-    console.log(buttonConfirm)
-
-    if(buttonConfirm == true){
-      fetch(`http://127.0.0.1:30021/delete/funcionarios/${id}`, {
-        method:`DELETE`,
-      })
-      .then(response => {
+      .then((response) => {
         if (response.ok) {
-         alert("Funcionario deletado com sucésso")
-         window.location.reload();
-        }
-        else {
-          alert("Erro ao tentar deletar o funcionario")
+          alert("Dados atualizados com sucésso");
+          window.location.reload();
+        } else {
+          alert("Erro ao tentar atualizar os dados");
         }
       })
-      .catch(error => {
-        console.error("Erro ao deletar:", error);
+      .catch((error) => {
+        console.error("Erro na requisição:", error);
       });
-    }
-    else{
+  };
 
+  buttonDeletar.onclick = () => {
+    let buttonConfirm = confirm("Desejá realmente deletar este funcionário ?");
+    buttonConfirm;
+    console.log(buttonConfirm);
+
+    if (buttonConfirm == true) {
+      fetch(`http://127.0.0.1:30021/delete/funcionarios/${id}`, {
+        method: `DELETE`,
+      })
+        .then((response) => {
+          if (response.ok) {
+            alert("Funcionario deletado com sucésso");
+            window.location.reload();
+          } else {
+            alert("Erro ao tentar deletar o funcionario");
+          }
+        })
+        .catch((error) => {
+          console.error("Erro ao deletar:", error);
+        });
+    } else {
     }
-    }
-  form.setAttribute("class","container");
+  };
+  form.setAttribute("class", "container");
   divWhite.appendChild(form);
   body.appendChild(divUserFunc);
   caixaBotoes.appendChild(buttonAtualizar);
-  caixaBotoes.appendChild(buttonDeletar)
+  caixaBotoes.appendChild(buttonDeletar);
   body.appendChild(caixaBotoes);
   divUserFunc.appendChild(buttonFechar);
 }
 
-
-
-
 function carregarDadosClientes() {
-
-  
-
-    // Obtém o elemento com o ID "list-cli"
-    const estrutura = document.getElementById("list-cli")
-    estrutura.innerHTML = "";
-    // Faz uma solicitação para buscar uma lista de usuários em um servidor local
-    fetch("http://127.0.0.1:30021/list/clientes")
+  // Obtém o elemento com o ID "list-cli"
+  const estrutura = document.getElementById("list-cli");
+  estrutura.innerHTML = "";
+  // Faz uma solicitação para buscar uma lista de usuários em um servidor local
+  fetch("http://127.0.0.1:30021/list/clientes")
     .then((response) => response.json())
     .then((result) => {
-        // Para cada item na lista de usuários, cria uma div de usuário e a preenche com informações
-        result.data.map((item, index) => {
-            let divUser = document.createElement("div");
-            divUser.setAttribute("class", "div_user");
-            divUser.innerHTML = `<i class="bi bi-person-circle"></i>
-            <h2>Nome: ${item.nome}</h2>
+      // Para cada item na lista de usuários, cria uma div de usuário e a preenche com informações
+      result.data.map((item, index) => {
+        let divUser = document.createElement("div");
+        divUser.setAttribute("class", "div_user");
+        divUser.innerHTML = `<i class="bi bi-person-circle"></i>
+            <h2>Nome: ${item.nomePaciente}</h2>
             <h2>Telefone: ${item.telefone}</h2>
             <h2>Status: ${item.statusCliente}</h2>
-            <h2>Responsavel: ${item.responsavel_cliente}</h2>
-            <h2>Idade Paciente: ${item.idade_paciente}</h2>
+            <h2>Responsavel: ${item.nome}</h2>
+            <h2>Data Nascimento: ${item.dataNascimento}</h2>
             <a href="#" data-bs-dismiss="modal" onclick="editarCli('${item.idcliente}','${item.nomePaciente}','${item.telefone}','${item.statusCliente}','${item.idfuncionarios}')">
                  <i class="bi bi-pen"></i>
             </a>
             `;
-            // Adiciona a div do usuário à estrutura
-            estrutura.appendChild(divUser);
-        })
-    }).catch((error) => console.log(`Erro ao executar a API -> ${error}`));
-};
+        // Adiciona a div do usuário à estrutura
+        estrutura.appendChild(divUser);
+      });
+    })
+    .catch((error) => console.log(`Erro ao executar a API -> ${error}`));
+}
 
-
-function editarCli(id,nomePaciente,telefone,statusCliente){
-
+function editarCli(id, nomePaciente, telefone, statusCliente) {
   let buttonAtualizarCli = document.createElement("div");
-  buttonAtualizarCli.setAttribute("class","divAtualizar")
+  buttonAtualizarCli.setAttribute("class", "divAtualizar");
   buttonAtualizarCli.innerHTML = `<div class="d-flex justify-content-center align-items-center" style=" height: ${buttonAtualizarCli.offsetHeight}px; height:20vh;">
   <button class="button">
     Atualizar Cliente
   </button>
   </div>
-  `
+  `;
 
   let buttonDeletarCli = document.createElement("div");
-  buttonDeletarCli.setAttribute("class","divDeletar")
+  buttonDeletarCli.setAttribute("class", "divDeletar");
   buttonDeletarCli.innerHTML = `<div class="d-flex justify-content-center align-items-center" style=" height: ${buttonAtualizarCli.offsetHeight}px; height:20vh;">
   <button class="button">
     Deletar Cliente
   </button>
   </div>
-  `
+  `;
 
   let caixaBotoesCli = document.createElement("div");
-  caixaBotoesCli.setAttribute("class","divBotoes")
-
-  
+  caixaBotoesCli.setAttribute("class", "divBotoes");
 
   var divUserFuncCli = document.createElement("div");
   divUserFuncCli.setAttribute("class", "div_editFuncionarios");
-  divUserFuncCli.innerHTML =
-  `
+  divUserFuncCli.innerHTML = `
   <div class="teste">
 
   <div class="input-container">
@@ -440,170 +418,187 @@ function editarCli(id,nomePaciente,telefone,statusCliente){
   
   `;
 
-
   // Referencia dos campos Inputs
-  
 
   // Fazer uma referência ao body da página HTML
   const body = document.body;
   const divWhite = document.createElement("div");
   const form = document.createElement("form");
-  
-  
 
   // Aplicando atributos para os elementos
-  divWhite.setAttribute("id","divWhite");
-  
-  let opt = `<option selected>Selecionar funcionário ao paciente</option>`
- 
+  divWhite.setAttribute("id", "divWhite");
+
+  let opt = `<option selected>Selecionar funcionário ao paciente</option>`;
+
   fetch("http://127.0.0.1:30021/list/funcionarios")
     .then((response) => response.json())
     .then((result) => {
       selectFun = document.getElementById("cargosFunc");
-        // Para cada item na lista de usuários, cria uma div de usuário e a preenche com informações
-        result.data.map((item, index) => {
-        
-          
-          opt += `<option value="${item.idfuncionarios}">${item.nome}</option>`;
-         
-         
-        })
-        selectFun.innerHTML = opt
-      }
-    )
-    .catch((erro)=>{
-      console.error(erro);
-    })
-  
-  
-  buttonAtualizarCli.onclick = ()=>{
-
-        fetch(`http://127.0.0.1:30021/update/cliente/${id}`,{
-          method:`PUT`,
-          headers:{
-              "accept":"application/json",
-              "content-type":"application/json",
-          },
-          body:JSON.stringify({
-             idfuncionarios:selectFun.value
-          })
-      })
-      .then(response => {
-        if (response.ok) {
-            alert("Dados atualizados com sucésso")
-            fetch(`http://127.0.0.1:30021/update/cliente/${id}`,{
-          method:`PUT`,
-          headers:{
-              "accept":"application/json",
-              "content-type":"application/json",
-          },
-          body:JSON.stringify({
-             statusCliente:"Atendido"
-          })
-        })
-        window.location.reload();
-       } else {
-            alert("Erro ao tentar atualizar os dados")
-        }
-    })
-    .catch(error => {
-        console.error("Erro na requisição:", error);
-    });
-      
-    
-  }
-  
-
-  buttonDeletarCli.onclick = ()=>{
-    
-   
-    let buttonConfirmCli = confirm("Desejá realmente deletar este cliente ?");
-    buttonConfirmCli
-    console.log(buttonConfirmCli)
-
-    if(buttonConfirmCli == true){
-      fetch(`http://127.0.0.1:30021/delete/cliente/${id}`, {
-        method:`DELETE`,
-      })
-      .then(response => {
-        if (response.ok) {
-         alert("Cliente deletado com sucésso")
-         window.location.reload();
-        }
-        else {
-          alert("Erro ao tentar deletar o cliente")
-        }
-      })
-      .catch(error => {
-        console.error("Erro ao deletar:", error);
+      // Para cada item na lista de usuários, cria uma div de usuário e a preenche com informações
+      result.data.map((item, index) => {
+        opt += `<option value="${item.idfuncionarios}">${item.nome}</option>`;
       });
+      selectFun.innerHTML = opt;
+    })
+    .catch((erro) => {
+      console.error(erro);
+    });
+
+  buttonAtualizarCli.onclick = () => {
+    fetch(`http://127.0.0.1:30021/update/cliente/${id}`, {
+      method: `PUT`,
+      headers: {
+        accept: "application/json",
+        "content-type": "application/json",
+      },
+      body: JSON.stringify({
+        idfuncionarios: selectFun.value,
+      }),
+    }).then((response) => {
+      if (response.ok) {
+        alert("Dados atualizados com sucésso");
+        fetch(`http://127.0.0.1:30021/update/cliente/${id}`, {
+          method: `PUT`,
+          headers: {
+            accept: "application/json",
+            "content-type": "application/json",
+          },
+          body: JSON.stringify({
+            statusCliente: "Atendido",
+          }),
+        });
+
+        function enviarEmail(destinatario, assunto, corpo) {
+          const transporter = nodemailer.createTransport({
+            service: "Gmail", // ou outro provedor de e-mail
+            auth: {
+              user: "nicolas.souzapb174@gmail.com", // Insira o seu e-mail aqui
+              pass: "Nicolas150@", // Insira a sua senha aqui
+            },
+          });
+
+          const mailOptions = {
+            from: "nicolas.souzapb174@gmail.com", // Insira o seu e-mail aqui
+            to: destinatario,
+            subject: assunto,
+            text: corpo,
+          };
+
+          transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+              console.log("Erro ao enviar o e-mail:", error);
+            } else {
+              console.log("E-mail enviado com sucesso:", info.response);
+            }
+          });
+        }
+
+        // Obtenha o e-mail do funcionário selecionado
+        // Realize um novo fetch para obter as informações do funcionário pelo seu ID
+        fetch(`http://127.0.0.1:30021/list/funcionarios/${selectFun.value}`)
+          .then((response) => response.json())
+          .then((funcionario) => {
+            if (funcionario) {
+              console.log("Funcionário encontrado:", funcionario);
+              emailFuncionarioSelecionado = funcionario.email;
+
+              // Agora você tem o email do funcionário, pode enviar o email
+              const destinatario = emailFuncionarioSelecionado;
+              const assunto = "Novo cliente vinculado";
+              const corpo = `Cliente vinculado. Entre em contato: `;
+
+              console.log("Enviando email para:", destinatario);
+              enviarEmail(destinatario, assunto, corpo);
+              window.location.reload();
+            } else {
+              console.log("Funcionário não encontrado");
+            }
+          })
+          .catch((error) => {
+            console.error("Erro na requisição:", error);
+          });
+      } else {
+        alert("Erro ao tentar atualizar os dados");
+      }
+    });
+  };
+
+  buttonDeletarCli.onclick = () => {
+    let buttonConfirmCli = confirm("Desejá realmente deletar este cliente ?");
+    buttonConfirmCli;
+    console.log(buttonConfirmCli);
+
+    if (buttonConfirmCli == true) {
+      fetch(`http://127.0.0.1:30021/delete/cliente/${id}`, {
+        method: `DELETE`,
+      })
+        .then((response) => {
+          if (response.ok) {
+            alert("Cliente deletado com sucésso");
+            window.location.reload();
+          } else {
+            alert("Erro ao tentar deletar o cliente");
+          }
+        })
+        .catch((error) => {
+          console.error("Erro ao deletar:", error);
+        });
+    } else {
     }
-    else{
+  };
 
-    }
-  }
+  form.setAttribute("class", "container");
 
-  
-  form.setAttribute("class","container");
-
-
-  
   divWhite.appendChild(form);
   body.appendChild(divUserFuncCli);
   caixaBotoesCli.appendChild(buttonAtualizarCli);
   caixaBotoesCli.appendChild(buttonDeletarCli);
-  body.appendChild(caixaBotoesCli); 
+  body.appendChild(caixaBotoesCli);
 }
 
-function cadastrarClientesForm (){
-
+function cadastrarClientesForm() {
   const body = document.body;
   const btnEnviarForm = document.getElementById("btnEnviarForm");
 
-  if( inputIdadeForm == "" ){
-    return alert("Todos os campos devem ser preenchidos para requistar o contato conosco")
-  }
-  else{
+  let inputNomePaciente = document.getElementById("inputPaciente").value;
+  let inputIdadeForm = document.getElementById("inputIdadeForm").value;
+  let inputAcompa = document.getElementById("inputAcompanhante").value;
+  let inputEmailPaci = document.getElementById("inputEmailForm").value;
+  let inputTelForm = document.getElementById("inputTelForm").value;
+  let inputDescr = document.getElementById("exampleFormControlTextarea1").value;
 
-   let inputNomePaciente = document.getElementById("inputPaciente").value;
-   let inputIdadeForm = document.getElementById("inputIdadeForm").value;
-   let inputAcompa = document.getElementById("inputAcompanhante").value;
-   let inputEmailPaci = document.getElementById("inputEmailForm").value;
-   let inputTelForm = document.getElementById("inpuTelForm").value;
-   let inputDescr = document.getElementById("exampleFormControlTextarea1").value;
+  console.log(inputNomePaciente);
+  console.log(inputIdadeForm);
+  console.log(inputAcompa);
+  console.log(inputEmailPaci);
+  console.log(inputTelForm);
+  console.log(inputDescr);
 
-   console.log(inputNomePaciente)
-   console.log(inputIdadeForm)
-   console.log(inputAcompa)
-   console.log(inputEmailPaci)
-   console.log(inputTelForm)
-   console.log(inputDescr)
-
-    fetch("http://127.0.0.1:30021/insert/cliente",{
-        method:"POST",
-        headers:{
-            "accept":"application/json",
-            "content-type":"application/json"
-        },
-        body:JSON.stringify({
-          nome:inputAcompa,
-          email:inputEmailPaci,
-          telefone:inputTelF,
-          dataNascimento:inputIdadeForm,
-          nomePaciente:inputAcompa,
-          descricaoSaude:inputDescr
-      })
-    }).then((response)=>response.json())
-        .then((result)=>{
-            if(result.output=="Inserção feita com sucésso"){
-                alert("Formulário enviado, Bem-vindo a Lumacare, entraremos em contato brevemente. Obrigado!");
-
-            }
-            else{
-                alert("Não foi possível enviar. Tente novamente mais tarde !");
-        
-            }
-        })
-        .catch((error)=>console.error(`Erro ao cadastrar -> ${error}`));
-    }
+  fetch("http://127.0.0.1:30021/insert/clientes", {
+    method: "POST",
+    headers: {
+      accept: "application/json",
+      "content-type": "application/json",
+    },
+    body: JSON.stringify({
+      nome: inputAcompa,
+      email: inputEmailPaci,
+      telefone: inputTelForm,
+      dataNascimento: inputIdadeForm,
+      nomePaciente: inputAcompa,
+      descricaoSaude: inputDescr,
+    }),
+  })
+    .then((response) => response.json())
+    .then((result) => {
+      if (result.output == "Inserção feita com sucésso") {
+        alert(
+          "Formulário enviado, Bem-vindo a Lumacare, entraremos em contato brevemente. Obrigado!",
+          window.location.reload()
+        );
+      } else {
+        alert("Não foi possível enviar. Tente novamente mais tarde !");
+      }
+    })
+    .catch((error) => console.error(`Erro ao cadastrar -> ${error}`));
 }

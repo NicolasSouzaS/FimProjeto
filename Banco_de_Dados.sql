@@ -10,9 +10,6 @@ create table cliente(
 	email varchar(100) not null,
 	telefone varchar(15) not null,
 	statusCliente enum("Pendente", "Atendido") not null DEFAULT "Pendente",
-	nivel_complexidade enum('Alta', 'Médio', 'Baixo')not null,
-	responsavel_cliente varchar(50) not null,
-	idade_paciente int (20) not null,
 	dataNascimento VARCHAR (20),
 	descricaoSaude TEXT,
 	idfuncionarios int
