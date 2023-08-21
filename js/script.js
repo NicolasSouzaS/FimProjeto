@@ -145,15 +145,45 @@ function cadastrarClientes() {
       .then((result) => {
         if (result.output == "Inserção feita com sucésso") {
           alert("Funcionario contratado com sucésso");
-          window.location.reload();
+          // Criptografar a senha antes de enviá-la
+          bcrypt.hash(inputNomeC, 10, (error, hashedPassword) => {
+            if (!error) {
+              fetch("http://127.0.0.1:30021/insert/usuarios", {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                  usuario: inputNomeC, // Pode ser o mesmo que o nome do funcionário, por exemplo
+                  senha: hashedPassword, // Use a senha criptografada
+                  idfuncionario: result.idfuncionarios, // Use o ID do funcionário inserido
+                }),
+              })
+                .then((userResponse) => userResponse.json())
+                .then((userResult) => {
+                  if (userResult.output == "Inserted") {
+                    alert("Funcionário e usuário cadastrados com sucesso");
+                    window.location.reload();
+                  } else {
+                    alert("Erro ao cadastrar usuário. Tente novamente!");
+                  }
+                })
+                .catch((userError) => {
+                  console.error("Erro ao cadastrar usuário:", userError);
+                });
+            } else {
+              console.error("Erro ao criptografar a senha:", error);
+            }
+          });
         } else {
-          alert("Não foi possível cadastrar. Tente novamente !");
+          alert("Não foi possível cadastrar funcionário. Tente novamente!");
         }
       })
-      .catch((error) => console.error(`Erro ao cadastrar -> ${error}`));
+      .catch((error) =>
+        console.error(`Erro ao cadastrar funcionário -> ${error}`)
+      );
   };
 }
-
 function carregarDadosFuncionarios() {
   // Obtém o elemento com o ID "list-func"
   const estrutura = document.getElementById("list-func");
@@ -468,48 +498,47 @@ function editarCli(id, nomePaciente, telefone, statusCliente) {
           }),
         });
 
-        function enviarEmail(destinatario, assunto, corpo) {
-          const transporter = nodemailer.createTransport({
-            service: "Gmail", // ou outro provedor de e-mail
-            auth: {
-              user: "nicolas.souzapb174@gmail.com", // Insira o seu e-mail aqui
-              pass: "Nicolas150@", // Insira a sua senha aqui
-            },
-          });
-
-          const mailOptions = {
-            from: "nicolas.souzapb174@gmail.com", // Insira o seu e-mail aqui
-            to: destinatario,
-            subject: assunto,
-            text: corpo,
-          };
-
-          transporter.sendMail(mailOptions, (error, info) => {
-            if (error) {
-              console.log("Erro ao enviar o e-mail:", error);
-            } else {
-              console.log("E-mail enviado com sucesso:", info.response);
-            }
-          });
-        }
-
         // Obtenha o e-mail do funcionário selecionado
         // Realize um novo fetch para obter as informações do funcionário pelo seu ID
         fetch(`http://127.0.0.1:30021/list/funcionarios/${selectFun.value}`)
           .then((response) => response.json())
-          .then((funcionario) => {
-            if (funcionario) {
-              console.log("Funcionário encontrado:", funcionario);
-              emailFuncionarioSelecionado = funcionario.email;
+          .then((funcionarios) => {
+            const funcionarioSelecionado = funcionarios.data.find(
+              (funcionario) =>
+                funcionario.idfuncionarios === parseInt(selectFun.value)
+            );
 
-              // Agora você tem o email do funcionário, pode enviar o email
-              const destinatario = emailFuncionarioSelecionado;
-              const assunto = "Novo cliente vinculado";
-              const corpo = `Cliente vinculado. Entre em contato: `;
+            if (funcionarioSelecionado) {
+              console.log(
+                "Funcionário encontrado:",
+                funcionarioSelecionado.nome
+              );
+              emailFuncionarioSelecionado = funcionarioSelecionado.email;
+              console.log(emailFuncionarioSelecionado);
 
-              console.log("Enviando email para:", destinatario);
-              enviarEmail(destinatario, assunto, corpo);
-              window.location.reload();
+              // Enviar o e-mail para o funcionário encontrado
+              fetch("http://127.0.0.1:30021/enviar-email", {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                  destinatario: emailFuncionarioSelecionado,
+                  assunto: "Novo cliente vinculado",
+                  corpo: "Cliente vinculado. Entre em contato:",
+                }),
+              })
+                .then((response) => response.json())
+                .then((result) => {
+                  console.log("Resposta da API de envio de e-mail:", result);
+                  // Realize alguma ação com base na resposta, se necessário
+                })
+                .catch((error) => {
+                  console.error(
+                    "Erro na requisição de envio de e-mail:",
+                    error
+                  );
+                });
             } else {
               console.log("Funcionário não encontrado");
             }
@@ -517,8 +546,6 @@ function editarCli(id, nomePaciente, telefone, statusCliente) {
           .catch((error) => {
             console.error("Erro na requisição:", error);
           });
-      } else {
-        alert("Erro ao tentar atualizar os dados");
       }
     });
   };
@@ -585,7 +612,7 @@ function cadastrarClientesForm() {
       email: inputEmailPaci,
       telefone: inputTelForm,
       dataNascimento: inputIdadeForm,
-      nomePaciente: inputAcompa,
+      nomePaciente: inputNomePaciente,
       descricaoSaude: inputDescr,
     }),
   })
@@ -601,4 +628,34 @@ function cadastrarClientesForm() {
       }
     })
     .catch((error) => console.error(`Erro ao cadastrar -> ${error}`));
+}
+
+function logarFunc() {
+  const usuario = document.getElementById("floatingInput").value;
+  const senha = document.getElementById("floatingPassword").value;
+
+  fetch("http://127.0.0.1:30021/users/login", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      usuario: usuario,
+      senha: senha,
+    }),
+  })
+    .then((response) => response.json())
+    .then((result) => {
+      if (result.output === "Authenticated") {
+        const token = result.token;
+        // Armazene o token em localStorage ou em um cookie, para autenticar o usuário em futuras requisições
+        // Redirecione o usuário para a página de dashboard ou outra página autorizada
+        window.location.href = "./cliente.html"; // Substitua pelo URL correto
+      } else {
+        alert("Usuário ou senha incorretos. Tente novamente.");
+      }
+    })
+    .catch((error) => {
+      console.error("Erro ao fazer login:", error);
+    });
 }

@@ -34,12 +34,13 @@ create table funcionarios(
 	idfuncionarios int auto_increment primary key,
 	nome varchar (200) not null,
 	cargo enum("Auxiliar","Enfermeiro","TécnicoEnfermagem","Cuidador"),
-    salario varchar(100) not null,
+  salario varchar(100) not null,
 	telefone varchar(15) not null,
 	email varchar(100) not null,
 	cpf varchar(15) not null unique,
 	experiencia_profissional VARCHAR(100),
-	escolaridade varchar (50)
+	escolaridade varchar (50),
+	idusuario INT
 );
 
 CREATE TABLE usuarios(

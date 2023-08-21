@@ -15,6 +15,8 @@ const bcrypt = require("bcrypt");
 //importar o módulo do jsonwebtoken para criptografia de sessão
 const jwt = require("jsonwebtoken");
 
+const bodyParser = require("body-parser");
+
 //importação do módulo de cross platform CORS
 const cors = require("cors");
 
@@ -238,7 +240,7 @@ app.get("/test/list", verificaToken, (req, res) => {
 });
 
 //Criação de uma nova rota para efetuar o cadastro dos usuários
-app.post("/users/insert", (req, res) => {
+app.post("/insert/usuarios", (req, res) => {
   //pegando a senha que foi enviada pelo usuário(Front)
   let sh = req.body.senha;
 
@@ -247,7 +249,7 @@ app.post("/users/insert", (req, res) => {
     if (!error) {
       //devolver a senha, porém, agora criptografada
       req.body.senha = result;
-      con.query("INSERT INTO usuario SET ?", [req.body], (error, result) => {
+      con.query("INSERT INTO usuarios SET ?", [req.body], (error, result) => {
         if (!error)
           return res.status(201).send({ output: `Inserted`, data: result });
         else
@@ -259,6 +261,18 @@ app.post("/users/insert", (req, res) => {
       return res
         .status(500)
         .send({ output: `Erro ao processar a senha`, erro: error });
+  });
+});
+
+app.get("/list/usuarios", (req, res) => {
+  con.query("SELECT * FROM usuarios", (error, result) => {
+    if (!error) {
+      return res.status(200).send({ output: "Ok", data: result });
+    } else
+      return res.status(500).send({
+        output: "Erro interno ao processar a solicitação",
+        erro: error,
+      });
   });
 });
 
@@ -294,11 +308,12 @@ app.put("/users/update/:id", verificaToken, (req, res) => {
 //rota para realizar o login
 app.post("/users/login", (req, res) => {
   con.query(
-    "SELECT * FROM usuario WHERE nomeusuario=?",
-    [req.body.nomeusuario],
+    "SELECT * FROM usuarios WHERE usuario=?",
+    [req.body.usuario], // Altere de idusuario para usuario
     (error, result) => {
       if (!error) {
-        if (!result || result == "" || result == null)
+        if (!result || result.length === 0)
+          // Verifique se o resultado não está vazio
           return res
             .status(400)
             .send({ output: `Usuário ou senha incorretos` });
@@ -306,9 +321,8 @@ app.post("/users/login", (req, res) => {
         bcrypt.compare(req.body.senha, result[0].senha, (err, igual) => {
           if (igual) {
             const token = criarToken(
-              result[0].idusuario,
-              result[0].nomeusuario,
-              result[0].email
+              result[0].idusuario, // Use o ID do usuário
+              result[0].usuario
             );
 
             return res
@@ -320,8 +334,6 @@ app.post("/users/login", (req, res) => {
               .send({ output: "Usuário ou Senha incorreto 1" });
           }
         });
-      } else if (!result) {
-        return res.status(400).send({ output: "Usuário ou Senha incorreto 2" });
       } else {
         return res
           .status(500)
