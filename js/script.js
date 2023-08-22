@@ -3,13 +3,13 @@ function enviarEmail(destinatario, assunto, corpo) {
   const transporter = nodemailer.createTransport({
     service: "Gmail", // ou outro provedor de e-mail
     auth: {
-      user: "nicolas.souzapb174@gmail.com", // Insira o seu e-mail aqui
-      pass: "Nicolas150@", // Insira a sua senha aqui
+      user: "nicolas.souzapb174@gmail.com",
+      pass: "Nicolas150@", // 
     },
   });
 
   const mailOptions = {
-    from: "nicolas.souzapb174@gmail.com", // Insira o seu e-mail aqui
+    from: "nicolas.souzapb174@gmail.com", 
     to: destinatario,
     subject: assunto,
     text: corpo,
@@ -354,7 +354,7 @@ function editarFunc(id, email, cargo, salario, telefone) {
   body.appendChild(caixaBotoes);
   divUserFunc.appendChild(buttonFechar);
 }
-
+let dtClientes
 function carregarDadosClientes() {
   // Obtém o elemento com o ID "list-cli"
   const estrutura = document.getElementById("list-cli");
@@ -364,6 +364,7 @@ function carregarDadosClientes() {
     .then((response) => response.json())
     .then((result) => {
       // Para cada item na lista de usuários, cria uma div de usuário e a preenche com informações
+      dtClientes = result.data
       result.data.map((item, index) => {
         let divUser = document.createElement("div");
         divUser.setAttribute("class", "div_user");
@@ -384,15 +385,18 @@ function carregarDadosClientes() {
     .catch((error) => console.log(`Erro ao executar a API -> ${error}`));
 }
 
-function editarCli(id, nomePaciente, telefone, statusCliente) {
-  let buttonAtualizarCli = document.createElement("div");
-  buttonAtualizarCli.setAttribute("class", "divAtualizar");
-  buttonAtualizarCli.innerHTML = `<div class="d-flex justify-content-center align-items-center" style=" height: ${buttonAtualizarCli.offsetHeight}px; height:20vh;">
-  <button class="button">
-    Atualizar Cliente
-  </button>
-  </div>
-  `;
+  let telefoneCliente
+  function editarCli(id, nomePaciente, telefone, statusCliente) {
+    telefoneCliente = telefone
+    nomePacienteE = nomePaciente
+    let buttonAtualizarCli = document.createElement("div");
+    buttonAtualizarCli.setAttribute("class", "divAtualizar");
+    buttonAtualizarCli.innerHTML = `<div class="d-flex justify-content-center align-items-center" style=" height: ${buttonAtualizarCli.offsetHeight}px; height:20vh;">
+    <button class="button">
+      Atualizar Cliente
+    </button>
+    </div>
+    `;
 
   let buttonDeletarCli = document.createElement("div");
   buttonDeletarCli.setAttribute("class", "divDeletar");
@@ -513,9 +517,11 @@ function editarCli(id, nomePaciente, telefone, statusCliente) {
                 "Funcionário encontrado:",
                 funcionarioSelecionado.nome
               );
+              cargoFuncionario = funcionarioSelecionado.cargoFunc;
               emailFuncionarioSelecionado = funcionarioSelecionado.email;
               console.log(emailFuncionarioSelecionado);
-
+              
+              
               // Enviar o e-mail para o funcionário encontrado
               fetch("http://127.0.0.1:30021/enviar-email", {
                 method: "POST",
@@ -525,7 +531,23 @@ function editarCli(id, nomePaciente, telefone, statusCliente) {
                 body: JSON.stringify({
                   destinatario: emailFuncionarioSelecionado,
                   assunto: "Novo cliente vinculado",
-                  corpo: "Cliente vinculado. Entre em contato:",
+                  corpo: `
+                  Prezado(a) ${funcionarioSelecionado.nome},
+                  
+                  Espero que esta mensagem o(a) encontre bem. Gostaríamos de informar que um novo cliente foi vinculado à empresa Luumacare, e desejamos compartilhar os detalhes para que você possa entrar em contato e prestar a assistência necessária.
+                  
+                  Detalhes do Cliente Vinculado:
+                  
+                  Nome do Cliente: ${nomePacienteE}
+                  Telefone: ${telefoneCliente}
+                  Este cliente agora faz parte de nossa base e busca por nossos serviços. Seu contato será essencial para oferecer informações e atendimento de qualidade. Agradecemos antecipadamente por sua dedicação e profissionalismo.
+                  
+                  Caso tenha alguma dúvida ou precise de mais informações sobre o cliente, fique à vontade para entrar em contato conosco. Agradecemos sua colaboração em tornar a experiência do cliente Luumacare excepcional.
+                  
+                  Atenciosamente,
+                  Luumacare
+                  
+                  Lembre-se de personalizar as informações, como o nome do funcionário, o nome do cliente e os detalhes de contato, conforme necessário. Certifique-se também de revisar o email antes de enviar para garantir que ele reflita a imagem profissional da empresa Luumacare.`,
                 }),
               })
                 .then((response) => response.json())

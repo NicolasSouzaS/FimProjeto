@@ -1,7 +1,7 @@
 -- Active: 1687177411690@@127.0.0.1@6556
-CREATE DATABASE	Lumacaredb2;
+CREATE DATABASE	Lumacaredb3;
 
-USE Lumacaredb2;
+USE Lumacaredb3;
 
 create table cliente(
 	idcliente int auto_increment primary key, 

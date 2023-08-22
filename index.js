@@ -68,17 +68,17 @@ app.post("/enviar-email", (req, res) => {
 
   // Configurar o transporter para enviar e-mails
   const transporter = nodemailer.createTransport({
-    service: "Gmail",
+    service: "Hotmail",
     auth: {
-      user: "nicolas.souzapb174@gmail.com",
-      pass: "Nicolas150@",
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASSWORD,
     },
   });
 
   // Configurar o email
   const mailOptions = {
-    from: "nicolas.souzapb174@gmail.com",
-    to: "nicolas.souzapb@gmail.com",
+    from: process.env.EMAIL_USER,
+    to: destinatario,
     subject: assunto,
     text: corpo,
   };
