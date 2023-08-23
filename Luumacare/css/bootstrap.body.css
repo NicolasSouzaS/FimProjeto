@@ -1,7 +1,0 @@
-.background-image{
-    background-image: linear-gradient(180deg, rgba(5, 19, 27, 0.63), rgba(5, 19, 27, 0.63)), url(../img/body1.jpg);
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    width: 100%;
-}

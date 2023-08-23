@@ -10,7 +10,6 @@ const express = require("express");
 const mysql = require("mysql2");
 
 //importar o módulo do bcrypt para criptgrafia de senha
-const bcrypt = require("bcrypt");
 
 //importar o módulo do jsonwebtoken para criptografia de sessão
 const jwt = require("jsonwebtoken");
@@ -241,29 +240,17 @@ app.get("/test/list", verificaToken, (req, res) => {
 
 //Criação de uma nova rota para efetuar o cadastro dos usuários
 app.post("/insert/usuarios", (req, res) => {
-  //pegando a senha que foi enviada pelo usuário(Front)
-  let sh = req.body.senha;
-
-  //realizar a criptografia da senha e depois cadastrar em banco
-  bcrypt.hash(sh, 10, (error, result) => {
+  // Realizar a inserção no banco de dados sem criptografia da senha
+  con.query("INSERT INTO usuarios SET ?", [req.body], (error, result) => {
     if (!error) {
-      //devolver a senha, porém, agora criptografada
-      req.body.senha = result;
-      con.query("INSERT INTO usuarios SET ?", [req.body], (error, result) => {
-        if (!error)
-          return res.status(201).send({ output: `Inserted`, data: result });
-        else
-          return res
-            .status(500)
-            .send({ output: `Erro ao tentar cadastrar`, erro: error });
-      });
-    } else
+      return res.status(201).send({ output: `Inserido`, data: result });
+    } else {
       return res
         .status(500)
-        .send({ output: `Erro ao processar a senha`, erro: error });
+        .send({ output: `Erro ao tentar cadastrar`, erro: error });
+    }
   });
 });
-
 app.get("/list/usuarios", (req, res) => {
   con.query("SELECT * FROM usuarios", (error, result) => {
     if (!error) {
@@ -277,63 +264,26 @@ app.get("/list/usuarios", (req, res) => {
 });
 
 //Vamos criar uma rota para atualizar os dados
-app.put("/users/update/:id", verificaToken, (req, res) => {
-  //pegando a senha que foi enviada pelo usuário(Front)
-  let sh = req.body.senha;
 
-  //realizar a criptografia da senha e depois cadastrar em banco
-  bcrypt.hash(sh, 10, (error, result) => {
-    if (!error) {
-      //devolver a senha, porém, agora criptografada
-      req.body.senha = result;
-      con.query(
-        "UPDATE usuario SET ? WHERE idusuario=?",
-        [req.body, req.params.id],
-        (error, result) => {
-          if (!error)
-            return res.status(202).send({ output: `Updated`, data: result });
-          else
-            return res
-              .status(500)
-              .send({ output: `Erro ao tentar atualizar`, erro: error });
-        }
-      );
-    } else
-      return res
-        .status(500)
-        .send({ output: `Erro ao processar a senha`, erro: error });
-  });
-});
-
-//rota para realizar o login
 app.post("/users/login", (req, res) => {
   con.query(
     "SELECT * FROM usuarios WHERE usuario=?",
-    [req.body.usuario], // Altere de idusuario para usuario
+    [req.body.usuario], // Parâmetro que será usado na consulta SQL
     (error, result) => {
       if (!error) {
-        if (!result || result.length === 0)
-          // Verifique se o resultado não está vazio
+        if (!result || result.length === 0) {
           return res
             .status(400)
             .send({ output: `Usuário ou senha incorretos` });
+        }
 
-        bcrypt.compare(req.body.senha, result[0].senha, (err, igual) => {
-          if (igual) {
-            const token = criarToken(
-              result[0].idusuario, // Use o ID do usuário
-              result[0].usuario
-            );
-
-            return res
-              .status(200)
-              .send({ output: "Authenticated", token: token });
-          } else {
-            return res
-              .status(400)
-              .send({ output: "Usuário ou Senha incorreto 1" });
-          }
-        });
+        if (req.body.senha === result[0].senha) {
+          return res.status(200).send({ output: "Autenticado com sucesso" });
+        } else {
+          return res
+            .status(400)
+            .send({ output: "Usuário ou senha incorretos" });
+        }
       } else {
         return res
           .status(500)
@@ -342,7 +292,6 @@ app.post("/users/login", (req, res) => {
     }
   );
 });
-
 //Criação do token para um usuario
 function criarToken(id, usuario, email) {
   return jwt.sign(

@@ -4,12 +4,12 @@ function enviarEmail(destinatario, assunto, corpo) {
     service: "Gmail", // ou outro provedor de e-mail
     auth: {
       user: "nicolas.souzapb174@gmail.com",
-      pass: "Nicolas150@", // 
+      pass: "Nicolas150@", //
     },
   });
 
   const mailOptions = {
-    from: "nicolas.souzapb174@gmail.com", 
+    from: "nicolas.souzapb174@gmail.com",
     to: destinatario,
     subject: assunto,
     text: corpo,
@@ -146,35 +146,29 @@ function cadastrarClientes() {
         if (result.output == "Inserção feita com sucésso") {
           alert("Funcionario contratado com sucésso");
           // Criptografar a senha antes de enviá-la
-          bcrypt.hash(inputNomeC, 10, (error, hashedPassword) => {
-            if (!error) {
-              fetch("http://127.0.0.1:30021/insert/usuarios", {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                  usuario: inputNomeC, // Pode ser o mesmo que o nome do funcionário, por exemplo
-                  senha: hashedPassword, // Use a senha criptografada
-                  idfuncionario: result.idfuncionarios, // Use o ID do funcionário inserido
-                }),
-              })
-                .then((userResponse) => userResponse.json())
-                .then((userResult) => {
-                  if (userResult.output == "Inserted") {
-                    alert("Funcionário e usuário cadastrados com sucesso");
-                    window.location.reload();
-                  } else {
-                    alert("Erro ao cadastrar usuário. Tente novamente!");
-                  }
-                })
-                .catch((userError) => {
-                  console.error("Erro ao cadastrar usuário:", userError);
-                });
-            } else {
-              console.error("Erro ao criptografar a senha:", error);
-            }
-          });
+          fetch("http://127.0.0.1:30021/insert/usuarios", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              usuario: inputNomeC,
+              senha: "LuumacareFuncionario", // Senha em texto simples
+              idfuncionario: result.idfuncionarios,
+            }),
+          })
+            .then((userResponse) => userResponse.json())
+            .then((userResult) => {
+              if (userResult.output === "Inserido") {
+                alert("Funcionário e usuário cadastrados com sucesso");
+                window.location.reload();
+              } else {
+                alert("Erro ao cadastrar usuário. Tente novamente!");
+              }
+            })
+            .catch((userError) => {
+              console.error("Erro ao cadastrar usuário:", userError);
+            });
         } else {
           alert("Não foi possível cadastrar funcionário. Tente novamente!");
         }
@@ -354,7 +348,7 @@ function editarFunc(id, email, cargo, salario, telefone) {
   body.appendChild(caixaBotoes);
   divUserFunc.appendChild(buttonFechar);
 }
-let dtClientes
+let dtClientes;
 function carregarDadosClientes() {
   // Obtém o elemento com o ID "list-cli"
   const estrutura = document.getElementById("list-cli");
@@ -364,7 +358,7 @@ function carregarDadosClientes() {
     .then((response) => response.json())
     .then((result) => {
       // Para cada item na lista de usuários, cria uma div de usuário e a preenche com informações
-      dtClientes = result.data
+      dtClientes = result.data;
       result.data.map((item, index) => {
         let divUser = document.createElement("div");
         divUser.setAttribute("class", "div_user");
@@ -385,13 +379,13 @@ function carregarDadosClientes() {
     .catch((error) => console.log(`Erro ao executar a API -> ${error}`));
 }
 
-  let telefoneCliente
-  function editarCli(id, nomePaciente, telefone, statusCliente) {
-    telefoneCliente = telefone
-    nomePacienteE = nomePaciente
-    let buttonAtualizarCli = document.createElement("div");
-    buttonAtualizarCli.setAttribute("class", "divAtualizar");
-    buttonAtualizarCli.innerHTML = `<div class="d-flex justify-content-center align-items-center" style=" height: ${buttonAtualizarCli.offsetHeight}px; height:20vh;">
+let telefoneCliente;
+function editarCli(id, nomePaciente, telefone, statusCliente) {
+  telefoneCliente = telefone;
+  nomePacienteE = nomePaciente;
+  let buttonAtualizarCli = document.createElement("div");
+  buttonAtualizarCli.setAttribute("class", "divAtualizar");
+  buttonAtualizarCli.innerHTML = `<div class="d-flex justify-content-center align-items-center" style=" height: ${buttonAtualizarCli.offsetHeight}px; height:20vh;">
     <button class="button">
       Atualizar Cliente
     </button>
@@ -520,8 +514,7 @@ function carregarDadosClientes() {
               cargoFuncionario = funcionarioSelecionado.cargoFunc;
               emailFuncionarioSelecionado = funcionarioSelecionado.email;
               console.log(emailFuncionarioSelecionado);
-              
-              
+
               // Enviar o e-mail para o funcionário encontrado
               fetch("http://127.0.0.1:30021/enviar-email", {
                 method: "POST",
@@ -668,10 +661,9 @@ function logarFunc() {
   })
     .then((response) => response.json())
     .then((result) => {
-      if (result.output === "Authenticated") {
-        const token = result.token;
-        // Armazene o token em localStorage ou em um cookie, para autenticar o usuário em futuras requisições
-        // Redirecione o usuário para a página de dashboard ou outra página autorizada
+      if (result.output === "Autenticado com sucesso") {
+        // O login foi bem-sucedido
+        // Você pode adicionar o redirecionamento ou outras ações aqui
         window.location.href = "./cliente.html"; // Substitua pelo URL correto
       } else {
         alert("Usuário ou senha incorretos. Tente novamente.");
